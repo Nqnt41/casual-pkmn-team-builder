@@ -1,4 +1,180 @@
 .pokemonSprite {
     width: 100px;
-    height: 100px;
+}
+
+.teamSprite {
+    z-index: 3;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 125px;
+}
+
+.behindSprite {
+    z-index: 1;
+    width: 125px;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: var(--type-color);
+}
+.behindSprite2 {
+    z-index: 2;
+    width: 125px;
+    margin-left: 5px;
+    margin-right: 5px;
+    /*background: -webkit-linear-gradient(var(--type-color), var(--type2-color));*/
+    background: linear-gradient(
+            to right,
+            var(--type-color) 0%,
+            var(--type-color) 50%,
+            var(--type2-color) 50%,
+            var(--type2-color) 100%
+    );
+}
+
+/* Primary Types */
+
+[data-type="normal"] {
+    --type-color: #A8A77A;
+}
+
+[data-type="fighting"] {
+    --type-color: #C22E28;
+}
+
+[data-type="flying"] {
+    --type-color: #A98FF3;
+}
+
+[data-type="poison"] {
+    --type-color: #A33EA1;
+}
+
+[data-type="ground"] {
+    --type-color: #E2BF65;
+}
+
+[data-type="rock"] {
+    --type-color: #B6A136;
+}
+
+[data-type="bug"] {
+    --type-color: #A6B91A;
+}
+
+[data-type="ghost"] {
+    --type-color: #735797;
+}
+
+[data-type="steel"] {
+    --type-color: #B7B7CE;
+}
+
+[data-type="fire"] {
+    --type-color: #EE8130;
+}
+
+[data-type="water"] {
+    --type-color: #6390F0;
+}
+
+[data-type="grass"] {
+    --type-color: #7AC74C;
+}
+
+[data-type="electric"] {
+    --type-color: #F7D02C;
+}
+
+[data-type="psychic"] {
+    --type-color: #F95587;
+}
+
+[data-type="ice"] {
+    --type-color: #96D9D6;
+}
+
+[data-type="dragon"] {
+    --type-color: #6F35FC;
+}
+
+[data-type="dark"] {
+    --type-color: #705746;
+}
+
+[data-type="fairy"] {
+    --type-color: #D685AD;
+}
+
+/* Secondary Types */
+[data-type2="normal"] {
+    --type2-color: #A8A77A;
+}
+
+[data-type2="fighting"] {
+    --type2-color: #C22E28;
+}
+
+[data-type2="flying"] {
+    --type2-color: #A98FF3;
+}
+
+[data-type2="poison"] {
+    --type2-color: #A33EA1;
+}
+
+[data-type2="ground"] {
+    --type2-color: #E2BF65;
+}
+
+[data-type2="rock"] {
+    --type2-color: #B6A136;
+}
+
+[data-type2="bug"] {
+    --type2-color: #A6B91A;
+}
+
+[data-type2="ghost"] {
+    --type2-color: #735797;
+}
+
+[data-type2="steel"] {
+    --type2-color: #B7B7CE;
+}
+
+[data-type2="fire"] {
+    --type2-color: #EE8130;
+}
+
+[data-type2="water"] {
+    --type2-color: #6390F0;
+}
+
+[data-type2="grass"] {
+    --type2-color: #7AC74C;
+}
+
+[data-type2="electric"] {
+    --type2-color: #F7D02C;
+}
+
+[data-type2="psychic"] {
+    --type2-color: #F95587;
+}
+
+[data-type2="ice"] {
+    --type2-color: #96D9D6;
+}
+
+[data-type2="dragon"] {
+    --type2-color: #6F35FC;
+}
+
+[data-type2="dark"] {
+    --type2-color: #705746;
+}
+
+[data-type2="fairy"] {
+    --type2-color: #D685AD;
 }
