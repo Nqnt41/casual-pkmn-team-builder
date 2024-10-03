@@ -2,7 +2,7 @@ import './App.css';
 import './pokemon.css';
 import {useEffect, useState} from "react";
 import {fetchData} from './manageData.js';
-import {addToTeam, removeFromTeam, printTeamImages, printAllImages} from './manageDisplay.js'
+import {addToTeam, removeFromTeam, printTeamImages, printAllImages, formatName} from './manageDisplay.js'
 
 function App() {
     const [data, setData] = useState("");
@@ -33,12 +33,11 @@ function App() {
                 }}
             />
             <button onClick={() => addToTeam(id, setID, team, setTeam, setData, setNote)}>Add</button>
-            <h1>{data?.name}</h1>
             {team.map((member, index) => (
-                <h3 onClick={() => removeFromTeam(member, setTeam, team)} key={index}>{index + 1 + ". " + member?.name}</h3>
+                <h3 onClick={() => removeFromTeam(member, setTeam, team)} key={index}>{index + 1 + ". " + formatName(member?.name)}</h3>
             ))}
             <h3>{'>' + note}</h3>
-            {printAllImages(api, loading)}
+            {printAllImages(api, loading, id, setID, team, setTeam, setData, setNote)}
         </div>
     );
 }
