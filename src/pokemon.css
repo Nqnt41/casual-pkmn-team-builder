@@ -3,7 +3,7 @@
 }
 
 .teamSprite {
-    z-index: 3;
+    z-index: 4;
     margin-left: 5px;
     margin-right: 5px;
     width: 125px;
@@ -16,6 +16,9 @@
     margin-left: 5px;
     margin-right: 5px;
     background-color: var(--type-color);
+    background-image: url("../images/pokeballSymbol.png");
+    background-size: 127px 127px;
+    background-position: center;
 }
 .behindSprite2 {
     z-index: 2;
@@ -23,13 +26,15 @@
     margin-left: 5px;
     margin-right: 5px;
     /*background: -webkit-linear-gradient(var(--type-color), var(--type2-color));*/
-    background: linear-gradient(
-            to right,
-            var(--type-color) 0%,
-            var(--type-color) 50%,
-            var(--type2-color) 50%,
-            var(--type2-color) 100%
-    );
+    background:
+        url("../images/pokeballSymbol.png") center/127px 127px no-repeat, /* The Pokéball image */
+        linear-gradient(
+                /*to right,*/
+                var(--type-color) 0%,
+                var(--type-color) 50%,
+                var(--type2-color) 50%,
+                var(--type2-color) 100%
+        );
 }
 
 /* Primary Types */

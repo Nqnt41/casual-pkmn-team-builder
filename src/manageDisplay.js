@@ -29,7 +29,7 @@ export const printTeamImages = (setTeam, team) => {
         <div>
             {team.map((pokemon, index) => (
                 <img
-                    className={`teamSprite behindSprite ${pokemon.types[1] ? 'behindSprite2' : ''}`}
+                    className={`teamSprite behindSprite ${pokemon.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
                     data-type={pokemon.types[0].type.name}
                     data-type2={pokemon.types[1] ? pokemon.types[1].type.name : ''}
                     key={index}
@@ -116,9 +116,4 @@ export const formatName = (name) => {
     else {
         return capitalizedParts.join(" ");
     }
-}
-
-const handleNameExceptions = (name) => {
-    // TODO: If name has gmax, turn into Gigantamax. If name has Pikachu, Mime, Porygon, etc handle differently. Or maybe use mega as keyword
-    return -1;
 }

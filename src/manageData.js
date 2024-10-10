@@ -60,7 +60,7 @@ export const fetchPokemonData = async (member, setData, setID) => {
             return null;
         }
         else {
-            const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${member}`);
+            const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${member}`); // TODO: Search broken
             setData(res.data);
             return res.data;
         }
