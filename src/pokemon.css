@@ -20,6 +20,7 @@
     background-size: 127px 127px;
     background-position: center;
 }
+
 .behindSprite2 {
     z-index: 2;
     width: 125px;
@@ -35,6 +36,13 @@
                 var(--type2-color) 50%,
                 var(--type2-color) 100%
         );
+}
+
+.pokemonSprite.highlight {
+    background-image: url("../images/glow.png");
+    background-size: 100px 100px; /* Match the size of the Pokémon sprite */
+    background-position: center;
+    background-repeat: no-repeat; /* Prevent the glow from tiling */
 }
 
 /* Primary Types */

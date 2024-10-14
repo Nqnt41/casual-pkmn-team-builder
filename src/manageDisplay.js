@@ -1,11 +1,12 @@
 import './App.css';
 import './pokemon.css';
 import {fetchPokemonData} from './manageData.js'
+import {useState} from "react";
 
 export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
     const fetchedData = await fetchPokemonData(id, setData, setID);
     if (fetchedData == null) {
-        setNote("Not a valid ID!");
+        setNote("Not a valid Pokemon!");
     }
     else if (team.length < 6) {
         setTeam([...team, fetchedData]);
@@ -41,22 +42,30 @@ export const printTeamImages = (setTeam, team) => {
     );
 };
 
-export const printAllImages = (api, loading, id, setID, team, setTeam, setData, setNote) => {
+export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote }) => {
+    const handlePokemonClick = (pokemonID) => {
+        addToTeam(pokemonID, setID, team, setTeam, setData, setNote); // Call your existing addToTeam function
+    };
+
     if (loading) {
-        return <h1>Loading...</h1>
-    } else {
+        return <h1>Loading...</h1>;
+    }
+    else {
         return (
             <div>
-                {api.map((pokemon) => (
-                    <img
-                        className="pokemonSprite"
-                        key={spliceID(pokemon?.url)}
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spliceID(pokemon?.url)}.png`}
-                        alt={pokemon?.name}
-                        onClick={() => addToTeam(spliceID(pokemon?.url), setID, team, setTeam, setData, setNote)}
-                        onError={(e) => { e.target.style.display = "none"; }}
-                    />
-                ))}
+                {api.map((pokemon) => {
+                    const pokemonID = parseInt(spliceID(pokemon?.url), 10); // Extract pokemonID for clarity
+                    return (
+                        <img
+                            className={`pokemonSprite ${team.some(pokemon => pokemon.id === pokemonID) ? 'highlight' : ''}`} // Highlight selected Pokémon
+                            key={pokemonID}
+                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonID}.png`}
+                            alt={pokemon?.name}
+                            onClick={() => handlePokemonClick(pokemonID)} // Call the click handler
+                            onError={(e) => { e.target.style.display = "none"; }}
+                        />
+                    );
+                })}
             </div>
         );
     }
@@ -70,8 +79,8 @@ const spliceID = (url) => {
 
 export const formatName = (name) => {
     const parts = name.split("-");
-    const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu"]
-    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-cap", "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr"]
+    const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu", "porygon-z"]
+    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-cap", "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-"]
 
     // Capitalize the first letter of each part
     const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
@@ -116,4 +125,63 @@ export const formatName = (name) => {
     else {
         return capitalizedParts.join(" ");
     }
+}
+
+export const convertToName = (member) => {
+    const parts = member.toLowerCase().split(" ");
+
+    const exceptions = ["alolan", "galarian", "hisuian", "gigantamax", "mr.", "mr", "jr.", "jr", "porygon z", "rotom"];
+
+    if (parts.length === 1) {
+        return parts[0];
+    }
+
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i] == "form" || parts[i] == "forme") {
+            parts.splice(i, 1);
+        }
+    }
+
+    if (exceptions.some(exception => member.includes(exception))) {
+        const name = member.toLowerCase();
+        if (name.includes("mr") || name.includes("mr.")) {
+            if (name.includes("galarian")) {
+                return "mr-mime-galar";
+            }
+            else {
+                return "mr" + "-" + parts[1];
+            }
+        }
+        else if (name.includes("jr") || name.includes("jr.")) {
+            return parts[0] + "-jr";
+        }
+        else if (name.includes("porygon z")) {
+            return "porygon-z";
+        }
+        else if (name.includes("alolan")) {
+            return parts[1] + "-alola";
+        }
+        else if (name.includes("galarian")) {
+            return parts[1] + "-galar";
+        }
+        else if (name.includes("hisuian")) {
+            return parts[1] + "-hisui";
+        }
+        else if (name.includes("gigantamax")) {
+            return parts[1] + "-gmax";
+        }
+        else if (name.includes("rotom")) {
+            return parts[0] + "-" + parts[1];
+        }
+        else {
+            return parts[1] + "-" + parts[0];
+        }
+    }
+    else if (parts.length === 2) {
+        return parts[1] + "-" + parts[0];
+    }
+    else if (parts.length === 3) {
+        return parts[1] + "-" + parts[0] + "-" + parts[2];
+    }
+    return parts[0];
 }
