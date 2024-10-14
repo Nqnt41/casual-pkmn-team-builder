@@ -1,4 +1,5 @@
 import Axios from "axios";
+import {convertToName} from './manageDisplay.js'
 
 export const fetchData = async (setLoading, setAPI) => {
     setLoading(true);
@@ -53,7 +54,10 @@ const checkAltForms = async (id) => {
 
 export const fetchPokemonData = async (member, setData, setID) => {
     try {
-        if (!/^\d+$/.test(member) && !/^[a-zA-Z]+$/.test(member)) {
+        if (typeof member !== 'number' && member.includes(' ')) {
+            member = convertToName(member);
+        }
+        if (!/^[\d\w\-\.\s]+$/.test(member)) {
             console.error("fetchPokemonData: Invalid Pokemon name");
             setData("");
             setID(null);
@@ -66,7 +70,7 @@ export const fetchPokemonData = async (member, setData, setID) => {
         }
     }
     catch (error) {
-        console.error("fetchPokemonData: Failed to fetch", error);
+        console.error("fetchPokemonData: Failed to fetch!", error);
         setData("");
         setID(null);
         return null;

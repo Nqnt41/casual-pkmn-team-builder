@@ -6,7 +6,7 @@ import {useState} from "react";
 export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
     const fetchedData = await fetchPokemonData(id, setData, setID);
     if (fetchedData == null) {
-        setNote("Not a valid ID!");
+        setNote("Not a valid Pokemon!");
     }
     else if (team.length < 6) {
         setTeam([...team, fetchedData]);
@@ -17,17 +17,12 @@ export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
     }
 };
 
-export const removeFromTeam = (member, setTeam, team, setSelectedPokemon, selectedPokemon) => {
+export const removeFromTeam = (member, setTeam, team) => {
     const newTeam = team.filter((pokemon) => pokemon !== member);
     setTeam(newTeam);
-
-    const updatedSelected = selectedPokemon.filter((pokemon) =>
-        !newTeam.some((teamMember) => teamMember.name === pokemon)
-    );
-    setSelectedPokemon(updatedSelected);
 };
 
-export const printTeamImages = (setTeam, team, setSelectedPokemon, selectedPokemon) => {
+export const printTeamImages = (setTeam, team) => {
     if (!team.length) {
         return <p>No team members yet!</p>;
     }
@@ -40,18 +35,15 @@ export const printTeamImages = (setTeam, team, setSelectedPokemon, selectedPokem
                     data-type2={pokemon.types[1] ? pokemon.types[1].type.name : ''}
                     key={index}
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                    onClick={() => removeFromTeam(pokemon, setTeam, team, setSelectedPokemon, selectedPokemon)}
+                    onClick={() => removeFromTeam(pokemon, setTeam, team)}
                 />
             ))}
         </div>
     );
 };
 
-export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote, setSelectedPokemon, selectedPokemon }) => {
+export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote }) => {
     const handlePokemonClick = (pokemonID) => {
-        if (!selectedPokemon.includes(pokemonID)) {
-            setSelectedPokemon([...selectedPokemon, pokemonID]); // Add Pokémon ID to the array
-        }
         addToTeam(pokemonID, setID, team, setTeam, setData, setNote); // Call your existing addToTeam function
     };
 
@@ -62,10 +54,10 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
         return (
             <div>
                 {api.map((pokemon) => {
-                    const pokemonID = spliceID(pokemon?.url); // Extract pokemonID for clarity
+                    const pokemonID = parseInt(spliceID(pokemon?.url), 10); // Extract pokemonID for clarity
                     return (
                         <img
-                            className={`pokemonSprite ${selectedPokemon.includes(pokemonID) ? 'highlight' : ''}`} // Highlight selected Pokémon
+                            className={`pokemonSprite ${team.some(pokemon => pokemon.id === pokemonID) ? 'highlight' : ''}`} // Highlight selected Pokémon
                             key={pokemonID}
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonID}.png`}
                             alt={pokemon?.name}
@@ -87,8 +79,8 @@ const spliceID = (url) => {
 
 export const formatName = (name) => {
     const parts = name.split("-");
-    const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu"]
-    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-cap", "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr"]
+    const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu", "porygon-z"]
+    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-cap", "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-"]
 
     // Capitalize the first letter of each part
     const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
@@ -133,4 +125,63 @@ export const formatName = (name) => {
     else {
         return capitalizedParts.join(" ");
     }
+}
+
+export const convertToName = (member) => {
+    const parts = member.toLowerCase().split(" ");
+
+    const exceptions = ["alolan", "galarian", "hisuian", "gigantamax", "mr.", "mr", "jr.", "jr", "porygon z", "rotom"];
+
+    if (parts.length === 1) {
+        return parts[0];
+    }
+
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i] == "form" || parts[i] == "forme") {
+            parts.splice(i, 1);
+        }
+    }
+
+    if (exceptions.some(exception => member.includes(exception))) {
+        const name = member.toLowerCase();
+        if (name.includes("mr") || name.includes("mr.")) {
+            if (name.includes("galarian")) {
+                return "mr-mime-galar";
+            }
+            else {
+                return "mr" + "-" + parts[1];
+            }
+        }
+        else if (name.includes("jr") || name.includes("jr.")) {
+            return parts[0] + "-jr";
+        }
+        else if (name.includes("porygon z")) {
+            return "porygon-z";
+        }
+        else if (name.includes("alolan")) {
+            return parts[1] + "-alola";
+        }
+        else if (name.includes("galarian")) {
+            return parts[1] + "-galar";
+        }
+        else if (name.includes("hisuian")) {
+            return parts[1] + "-hisui";
+        }
+        else if (name.includes("gigantamax")) {
+            return parts[1] + "-gmax";
+        }
+        else if (name.includes("rotom")) {
+            return parts[0] + "-" + parts[1];
+        }
+        else {
+            return parts[1] + "-" + parts[0];
+        }
+    }
+    else if (parts.length === 2) {
+        return parts[1] + "-" + parts[0];
+    }
+    else if (parts.length === 3) {
+        return parts[1] + "-" + parts[0] + "-" + parts[2];
+    }
+    return parts[0];
 }
