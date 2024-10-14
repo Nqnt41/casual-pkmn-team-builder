@@ -1,6 +1,7 @@
 import './App.css';
 import './pokemon.css';
 import {fetchPokemonData} from './manageData.js'
+import {useState} from "react";
 
 export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
     const fetchedData = await fetchPokemonData(id, setData, setID);
@@ -16,12 +17,17 @@ export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
     }
 };
 
-export const removeFromTeam = (member, setTeam, team) => {
+export const removeFromTeam = (member, setTeam, team, setSelectedPokemon, selectedPokemon) => {
     const newTeam = team.filter((pokemon) => pokemon !== member);
     setTeam(newTeam);
+
+    const updatedSelected = selectedPokemon.filter((pokemon) =>
+        !newTeam.some((teamMember) => teamMember.name === pokemon)
+    );
+    setSelectedPokemon(updatedSelected);
 };
 
-export const printTeamImages = (setTeam, team) => {
+export const printTeamImages = (setTeam, team, setSelectedPokemon, selectedPokemon) => {
     if (!team.length) {
         return <p>No team members yet!</p>;
     }
@@ -34,29 +40,40 @@ export const printTeamImages = (setTeam, team) => {
                     data-type2={pokemon.types[1] ? pokemon.types[1].type.name : ''}
                     key={index}
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                    onClick={() => removeFromTeam(pokemon, setTeam, team)}
+                    onClick={() => removeFromTeam(pokemon, setTeam, team, setSelectedPokemon, selectedPokemon)}
                 />
             ))}
         </div>
     );
 };
 
-export const printAllImages = (api, loading, id, setID, team, setTeam, setData, setNote) => {
+export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote, setSelectedPokemon, selectedPokemon }) => {
+    const handlePokemonClick = (pokemonID) => {
+        if (!selectedPokemon.includes(pokemonID)) {
+            setSelectedPokemon([...selectedPokemon, pokemonID]); // Add Pokémon ID to the array
+        }
+        addToTeam(pokemonID, setID, team, setTeam, setData, setNote); // Call your existing addToTeam function
+    };
+
     if (loading) {
-        return <h1>Loading...</h1>
-    } else {
+        return <h1>Loading...</h1>;
+    }
+    else {
         return (
             <div>
-                {api.map((pokemon) => (
-                    <img
-                        className="pokemonSprite"
-                        key={spliceID(pokemon?.url)}
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spliceID(pokemon?.url)}.png`}
-                        alt={pokemon?.name}
-                        onClick={() => addToTeam(spliceID(pokemon?.url), setID, team, setTeam, setData, setNote)}
-                        onError={(e) => { e.target.style.display = "none"; }}
-                    />
-                ))}
+                {api.map((pokemon) => {
+                    const pokemonID = spliceID(pokemon?.url); // Extract pokemonID for clarity
+                    return (
+                        <img
+                            className={`pokemonSprite ${selectedPokemon.includes(pokemonID) ? 'highlight' : ''}`} // Highlight selected Pokémon
+                            key={pokemonID}
+                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonID}.png`}
+                            alt={pokemon?.name}
+                            onClick={() => handlePokemonClick(pokemonID)} // Call the click handler
+                            onError={(e) => { e.target.style.display = "none"; }}
+                        />
+                    );
+                })}
             </div>
         );
     }

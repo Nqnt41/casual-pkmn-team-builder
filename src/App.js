@@ -1,8 +1,7 @@
-import './App.css';
 import './pokemon.css';
 import {useEffect, useState} from "react";
 import {fetchData} from './manageData.js';
-import {addToTeam, removeFromTeam, printTeamImages, printAllImages, formatName} from './manageDisplay.js'
+import {addToTeam, removeFromTeam, printTeamImages, PrintAllImages, formatName} from './manageDisplay.js'
 
 function App() {
     const [data, setData] = useState("");
@@ -11,18 +10,19 @@ function App() {
     const [team, setTeam] = useState([]);
     const [note, setNote] = useState("");
     const [loading, setLoading] = useState(true);
+    const [selectedPokemon, setSelectedPokemon] = useState([]);
 
     useEffect(() => {
         fetchData(setLoading, setAPI);
     }, []);
 
     useEffect(() => {
-        printTeamImages(setTeam, team);
+        printTeamImages(setTeam, team, setSelectedPokemon, selectedPokemon);
     }, [api]);
 
     return (
         <div className="App">
-            {printTeamImages(setTeam, team)}
+            {printTeamImages(setTeam, team, setSelectedPokemon, selectedPokemon)}
             <input
                 placeholder="Pokemon ID"
                 onChange={(event) => setID(event.target.value)}
@@ -34,10 +34,10 @@ function App() {
             />
             <button onClick={() => addToTeam(id, setID, team, setTeam, setData, setNote)}>Add</button>
             {team.map((member, index) => (
-                <h3 onClick={() => removeFromTeam(member, setTeam, team)} key={index}>{index + 1 + ". " + formatName(member?.name)}</h3>
+                <h3 onClick={() => removeFromTeam(member, setTeam, team, setSelectedPokemon, selectedPokemon)} key={index}>{index + 1 + ". " + formatName(member?.name)}</h3>
             ))}
             <h3>{'>' + note}</h3>
-            {printAllImages(api, loading, id, setID, team, setTeam, setData, setNote)}
+            <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setData={setData} setNote={setNote} setSelectedPokemon={setSelectedPokemon} selectedPokemon={selectedPokemon}/>
         </div>
     );
 }
