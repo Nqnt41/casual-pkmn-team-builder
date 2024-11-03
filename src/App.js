@@ -17,11 +17,12 @@ function App() {
 
     useEffect(() => {
         printTeamImages(setTeam, team);
+        console.log("data", api);
     }, [api]);
 
     return (
-        <div className="App">
-            {printTeamImages(setTeam, team)}
+        <div className="App backgroundRSE">
+            <div> {printTeamImages(setTeam, team)} </div>
             <input
                 placeholder="Pokemon ID"
                 onChange={(event) => setID(event.target.value)}

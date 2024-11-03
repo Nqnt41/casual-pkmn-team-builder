@@ -27,7 +27,7 @@ export const printTeamImages = (setTeam, team) => {
         return <p>No team members yet!</p>;
     }
     return (
-        <div>
+        <div className="teamBorder">
             {team.map((pokemon, index) => (
                 <img
                     className={`teamSprite behindSprite ${pokemon.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
@@ -52,7 +52,7 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
     }
     else {
         return (
-            <div>
+            <div className="groupBorder">
                 {api.map((pokemon) => {
                     const pokemonID = parseInt(spliceID(pokemon?.url), 10); // Extract pokemonID for clarity
                     return (
