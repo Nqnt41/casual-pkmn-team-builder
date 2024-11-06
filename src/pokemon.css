@@ -141,6 +141,10 @@
     --type-color: #D685AD;
 }
 
+[data-type="stellar"] {
+    --type-color: #40B5A5;
+}
+
 /* Secondary Types */
 [data-type2="normal"] {
     --type2-color: #A8A77A;
