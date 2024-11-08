@@ -1,5 +1,6 @@
 import Axios from "axios";
 import {convertToName} from './manageDisplay.js'
+import {pokemon} from './pokemonInfo'
 
 export const fetchData = async (setLoading, setAPI) => {
     setLoading(true);
@@ -13,6 +14,23 @@ const fetchAPI = async (setAPI) => {
         const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=1025`);
         setAPI(res.data.results); // Adjust for correct data structure 1025
         return res.data.results;
+    }
+    catch (error) {
+        console.error("FetchAPI: Error fetching API:", error);
+        setAPI([]);
+        return [];
+    }
+};
+
+const fetchPokedexAPI = async (setAPI, pokedexId) => {
+    try {
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexId}/`);
+        const pokemonList = res.data.pokemon_entries.map(entry => ({
+            name: entry.pokemon_species.name,
+            url: `https://pokeapi.co/api/v2/pokemon/${entry.pokemon_species.name}/`
+        }));
+        setAPI(pokemonList);
+        return pokemonList;
     }
     catch (error) {
         console.error("FetchAPI: Error fetching API:", error);

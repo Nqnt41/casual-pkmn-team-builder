@@ -21,7 +21,7 @@ function App() {
     }, [api]);
 
     return (
-        <div className="App backgroundRSE">
+        <div className="App backgroundBW">
             <div> {printTeamImages(setTeam, team)} </div>
             <input
                 placeholder="Pokemon ID"

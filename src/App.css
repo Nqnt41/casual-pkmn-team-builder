@@ -96,13 +96,16 @@
 }
 
 .backgroundBW {
-  background-image:
+    background-size: 100%, auto;
+    background-image:
+          url("../images/bg/bwSilhouettes.png"),
           var(--bottom-fade-gradient),
           linear-gradient(to right,
-          #676767 49%, /* Gray side */
-          #9e9e9e 50%, /* Middle color stop for smoother transition */
-          #ffffff 51%); /* White side */
+          #676767 49.5%, /* Gray side */
+          #000000 49.5%, #000000 50.5%, /* Middle color stop for smoother transition */
+          #ffffff 50.5%); /* White side */
   background-blend-mode: normal;
+  background-repeat: repeat, no-repeat, no-repeat;
 }
 
 .backgroundXY {
