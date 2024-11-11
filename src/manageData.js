@@ -1,15 +1,16 @@
 import Axios from "axios";
 import {convertToName} from './manageDisplay.js'
-import {pokemon} from './pokemonInfo'
+import {Pokemon} from './pokemonInfo'
 
 export const fetchData = async (setLoading, setAPI) => {
     setLoading(true);
-    const fetchedAPI = await fetchAPI(setAPI);
+    const fetchedAPI = await fetchPokedexAPI(setAPI, 1);
+    console.log("Did it work", fetchedAPI);
     await fetchSpeciesInfo(fetchedAPI, setAPI);
     setLoading(false);
 };
 
-const fetchAPI = async (setAPI) => {
+/*const fetchAPI = async (setAPI) => {
     try {
         const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=1025`);
         setAPI(res.data.results); // Adjust for correct data structure 1025
@@ -20,20 +21,55 @@ const fetchAPI = async (setAPI) => {
         setAPI([]);
         return [];
     }
+};*/
+
+const concurrencyLimitFetch = async (urls, limit) => {
+    const results = [];
+    const executing = new Set();
+
+    for (let i  = 0; i < urls.length; i++) {
+        const promise = Axios.get(urls[i]).then((res) => res.data).catch((err) => console.error(`Error fetching ${urls[i]}`, err));
+
+        results.push(promise);
+        executing.add(promise);
+
+        promise.finally(() => executing.delete(promise));
+
+        if (executing.size >= limit) {
+            await Promise.race(executing);
+        }
+    }
+
+    return Promise.all(results);
 };
 
 const fetchPokedexAPI = async (setAPI, pokedexId) => {
     try {
         const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexId}/`);
-        const pokemonList = res.data.pokemon_entries.map(entry => ({
-            name: entry.pokemon_species.name,
-            url: `https://pokeapi.co/api/v2/pokemon/${entry.pokemon_species.name}/`
-        }));
+
+        // Extract URLs
+        const urls = res.data.pokemon_entries.map((entry) =>
+            entry.pokemon_species.url.replace('-species', ''));
+
+        // Fetch in batches (e.g., 5 requests at a time)
+        const fetchedData = await concurrencyLimitFetch(urls, 5);
+
+        const pokemonList = fetchedData.map((data, index) => {
+            if (!data) return null; // Skip any failed requests
+
+            const abilities = data.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
+            const stats = data.stats?.map((stat) => stat.base_stat) || [];
+            const types = data.types?.map((type) => type.type.name) || [];
+            //const appearances = data.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
+            //const eggGroups = data.egg_groups?.map((group) => group.name) || [];
+
+            return new Pokemon(data.id, [], data.name, data.name, abilities, stats, types, {}, [], [], false, false, false);
+        }).filter(Boolean); // Remove any null values for failed requests
+
         setAPI(pokemonList);
         return pokemonList;
-    }
-    catch (error) {
-        console.error("FetchAPI: Error fetching API:", error);
+    } catch (error) {
+        console.error("FetchPokedexAPI: Error fetching API:", error);
         setAPI([]);
         return [];
     }

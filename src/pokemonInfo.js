@@ -1,25 +1,23 @@
-class Pokemon {
-    constructor(globalId = -1, id = -1, name = "", nickname = "", abilities = {}, encounters = "", stats = {}, types = {}, coverage = {},
-                forms = [], varieties = [], sprite = "", shinySprite = "", isLegendary = false, isMythical = false) {
-        this.globalId = globalId;
+export class Pokemon {
+    constructor(id = -1, appearances = [], name = "", nickname = "", abilities = [], stats = [], types = {},
+                coverage = {}, eggGroups = [], varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
         this.id = id;
+        this.appearances = appearances;
         this.name = name;
         this.nickname = name;
         this.abilities = abilities;
-        this.encounters = encounters;
         this.stats = stats;
         this.types = types;
         this.coverage = coverage;
-        this.forms = forms;
+        this.eggGroups = eggGroups;
         this.varieties = varieties;
-        this.sprite = sprite;
-        this.shinySprite = shinySprite;
         this.isLegendary = isLegendary;
         this.isMythical = isMythical;
+        this.isBaby = isBaby;
     }
 }
 
-const types = {
+export const types = {
     normal: {
         id: 1,
         name: "normal",
