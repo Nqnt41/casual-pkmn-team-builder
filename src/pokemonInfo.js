@@ -1,10 +1,12 @@
 export class Pokemon {
-    constructor(id = -1, appearances = [], name = "", nickname = "", abilities = [], stats = [], types = {},
-                coverage = {}, eggGroups = [], varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
+    constructor(id = -1, appearances = [], name = "", printName = "", nickname = name,
+                abilities = [], stats = [], types = {}, coverage = {}, eggGroups = [],
+                varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
         this.id = id;
         this.appearances = appearances;
         this.name = name;
-        this.nickname = name;
+        this.printName = printName;
+        this.nickname = nickname;
         this.abilities = abilities;
         this.stats = stats;
         this.types = types;

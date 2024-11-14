@@ -80,7 +80,8 @@ const spliceID = (url) => {
 export const formatName = (name) => {
     const parts = name.split("-");
     const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu", "porygon-z"]
-    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-cap", "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-"]
+    const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-altered", "-cap",
+        "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-", "nidoran-m", "nidoran-f"]
 
     // Capitalize the first letter of each part
     const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
@@ -89,7 +90,7 @@ export const formatName = (name) => {
         return capitalizedParts[0];
     }
     else if (maintainNames.some(exception => name.includes(exception))) {
-        return name.charAt(0).toUpperCase() + name.slice(1)
+        return name.charAt(0).toUpperCase() + name.slice(1);
     }
     else if (exceptions.some(exception => name.includes(exception))) {
         if (name.includes("mr-")) {
@@ -101,6 +102,12 @@ export const formatName = (name) => {
         }
         else if (name.includes("jr-")) {
             return "Mime Jr.";
+        }
+        else if (name.includes("nidoran-m")) {
+            return "Male Nidoran";
+        }
+        else if (name.includes("nidoran-f")) {
+            return "Female Nidoran";
         }
         else if (name.includes("ogerpon") || name.includes("urshifu") || name.includes("-cap")) {
             if (name.includes("-gmax")) {

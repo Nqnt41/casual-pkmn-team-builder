@@ -17,7 +17,6 @@ function App() {
 
     useEffect(() => {
         printTeamImages(setTeam, team);
-        console.log("data", api);
     }, [api]);
 
     return (
