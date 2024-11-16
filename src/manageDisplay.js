@@ -1,15 +1,16 @@
 import './App.css';
 import './pokemon.css';
-import {fetchPokemonData} from './manageData.js'
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import {useState} from "react";
+import {fetchVariety} from "./manageData";
 
-export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
-    const fetchedData = await fetchPokemonData(id, setData, setID);
-    if (fetchedData == null) {
+export const addToTeam = async (pokemon, setID, team, setTeam, setData, setNote) => {
+    if (pokemon == null) {
         setNote("Not a valid Pokemon!");
     }
     else if (team.length < 6) {
-        setTeam([...team, fetchedData]);
+        setTeam([...team, pokemon]);
         setNote("");
     }
     else {
@@ -18,8 +19,9 @@ export const addToTeam = async (id, setID, team, setTeam, setData, setNote) => {
 };
 
 export const removeFromTeam = (member, setTeam, team) => {
-    const newTeam = team.filter((pokemon) => pokemon !== member);
-    setTeam(newTeam);
+    for (let i = 0; i < team.length; i++) {
+        if (team[i] == member) { setTeam(team.filter((item, j) => j !== i)); }
+    }
 };
 
 export const printTeamImages = (setTeam, team) => {
@@ -30,9 +32,9 @@ export const printTeamImages = (setTeam, team) => {
         <div className="teamBorder">
             {team.map((pokemon, index) => (
                 <img
-                    className={`teamSprite behindSprite ${pokemon.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
-                    data-type={pokemon.types[0].type.name}
-                    data-type2={pokemon.types[1] ? pokemon.types[1].type.name : ''}
+                    className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
+                    data-type={pokemon?.types[0]}
+                    data-type2={pokemon?.types[1] ? pokemon?.types[1] : ''}
                     key={index}
                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
                     onClick={() => removeFromTeam(pokemon, setTeam, team)}
@@ -43,8 +45,30 @@ export const printTeamImages = (setTeam, team) => {
 };
 
 export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote }) => {
-    const handlePokemonClick = (pokemonID) => {
-        addToTeam(pokemonID, setID, team, setTeam, setData, setNote); // Call your existing addToTeam function
+    const [popup, setPopup] = useState(null);
+    const [hoveredPokemonId, setHoveredPokemonId] = useState(null); // Track which Pokémon is being hovered
+
+    const handleMouseEnter = (pokemonId) => {
+        setHoveredPokemonId(pokemonId);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredPokemonId(null);
+    };
+
+    const handleClick = (e, pokemon) => {
+        if (e.nativeEvent.button === 0) {
+            if (pokemon.varieties.length > 1 && team.length < 6) {
+                setPopup(pokemon);
+            }
+            else {
+                addToTeam(pokemon, setID, team, setTeam, setData, setNote);
+            }
+        }
+        else if (e.nativeEvent.button === 2) {
+            e.preventDefault();
+            removeFromTeam(pokemon, setTeam, team);
+        }
     };
 
     if (loading) {
@@ -53,28 +77,43 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
     else {
         return (
             <div className="groupBorder">
-                {api.map((pokemon) => {
-                    const pokemonID = parseInt(spliceID(pokemon?.url), 10); // Extract pokemonID for clarity
-                    return (
-                        <img
-                            className={`pokemonSprite ${team.some(pokemon => pokemon.id === pokemonID) ? 'highlight' : ''}`} // Highlight selected Pokémon
-                            key={pokemonID}
-                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonID}.png`}
-                            alt={pokemon?.name}
-                            onClick={() => handlePokemonClick(pokemonID)} // Call the click handler
-                            onError={(e) => { e.target.style.display = "none"; }}
-                        />
-                    );
-                })}
+                {api.map((pokemon) => (
+                    <img
+                        className={`pokemonSprite ${team.some(member => member.id === pokemon.id) ? 'highlight' : ''} 
+                        ${hoveredPokemonId === pokemon.id ? 'altHighlight' : ''}`}
+                        key={pokemon.id}
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
+                        alt={pokemon?.printName}
+                        onMouseEnter={() => handleMouseEnter(pokemon.id)} // Pass the Pokémon's ID
+                        onMouseLeave={handleMouseLeave}
+                        onClick={(e) => handleClick(e, pokemon)}
+                        onContextMenu={(e) => handleClick(e, pokemon)}
+                        onError={(e) => {
+                            e.target.style.display = "none";
+                        }}
+                    />
+                ))}
+                {popup && (
+                    <Popup open={popup !== null} onClose={() => setPopup(null)} position="center">
+                        <ol>
+                            {popup.varieties.map((variety, index) => (
+                                <li key = {index}>
+                                    <button onClick={async () => {
+                                        console.log("variety", variety);
+                                        const newPokemon = await fetchVariety(variety, popup);
+                                        addToTeam(newPokemon, setID, team, setTeam, setData, setNote);
+                                        setPopup(null);
+                                    }}>
+                                        {formatName(variety)}
+                                    </button>
+                                </li>
+                            ))}
+                        </ol>
+                    </Popup>
+                )}
             </div>
         );
     }
-};
-
-const spliceID = (url) => {
-    const regex = /^https:\/\/pokeapi\.co\/api\/v2\/pokemon\/(\d+)\/?$/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
 };
 
 export const formatName = (name) => {
@@ -144,7 +183,7 @@ export const convertToName = (member) => {
     }
 
     for (let i = 0; i < parts.length; i++) {
-        if (parts[i] == "form" || parts[i] == "forme") {
+        if (parts[i] === "form" || parts[i] === "forme") {
             parts.splice(i, 1);
         }
     }

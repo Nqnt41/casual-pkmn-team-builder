@@ -6,22 +6,9 @@ export const fetchData = async (setLoading, setAPI) => {
     setLoading(true);
     const fetchedApi = await fetchPokedexAPI(setAPI, 1);
     // await fetchSpeciesInfo(fetchedAPI, setAPI);
-    console.log("data", fetchedApi);
+    console.log("Fetched data", fetchedApi);
     setLoading(false);
 };
-
-/*const fetchAPI = async (setAPI) => {
-    try {
-        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=1025`);
-        setAPI(res.data.results); // Adjust for correct data structure 1025
-        return res.data.results;
-    }
-    catch (error) {
-        console.error("FetchAPI: Error fetching API:", error);
-        setAPI([]);
-        return [];
-    }
-};*/
 
 const concurrencyLimitFetch = async (urls, limit) => {
     const results = [];
@@ -50,6 +37,7 @@ const concurrencyLimitFetch = async (urls, limit) => {
 
 const fetchPokedexAPI = async (setAPI, pokedexId) => {
     try {
+        // TODO: for (const pokedexId of pokedexIds) {
         const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexId}/`);
 
         // Extract URLs
@@ -102,58 +90,23 @@ const fetchPokedexAPI = async (setAPI, pokedexId) => {
     }
 };
 
-const fetchSpeciesInfo = async (fetchedAPI, setAPI) => {
-    const apiCopy = [...fetchedAPI];
-
-    for (let i  = apiCopy.length; i > 0; i--) {
-        const altForm = await checkAltForms(i);
-
-        for (let j  = 0; j < altForm.length; j++) {
-            apiCopy.splice(i, 0, altForm[j]);
-        }
-    }
-
-    setAPI(apiCopy);
-};
-
-const checkAltForms = async (id) => {
+export const fetchVariety = async (name, oriPokemon) => {
     try {
-        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-        const altForms = [];
-        for (let i = res.data.varieties?.length - 1; i >= 0; i--) {
-            if (!res.data.varieties[i].is_default && !res.data.varieties[i].pokemon.name.includes("totem")) {
-                altForms.push(res.data.varieties[i].pokemon);
-            }
-        }
-        return altForms;
-    }
-    catch (error) {
-        console.error("checkAltForm: error fetching species", error);
-        return [];
-    }
-}
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+        console.log("res", res.data);
 
-export const fetchPokemonData = async (member, setData, setID) => {
-    try {
-        if (typeof member !== 'number' && member.includes(' ')) {
-            member = convertToName(member);
-        }
-        if (!/^[\d\w\-\.\s]+$/.test(member)) {
-            console.error("fetchPokemonData: Invalid Pokemon name");
-            setData("");
-            setID(null);
-            return null;
-        }
-        else {
-            const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${member}`); // TODO: Search broken
-            setData(res.data);
-            return res.data;
-        }
-    }
-    catch (error) {
-        console.error("fetchPokemonData: Failed to fetch!", error);
-        setData("");
-        setID(null);
+        const printName = formatName(res.data.name);
+        const abilities = res.data.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
+        const stats = res.data.stats?.map((stat) => stat.base_stat) || [];
+        const types = res.data.types?.map((type) => type.type.name) || [];
+
+        console.log(`fetchVariety - ${res.data}`);
+        console.log('types', types);
+
+        return new Pokemon(res.data.id, oriPokemon.appearances, res.data.name, printName, res.data.name, abilities, stats, types,
+            {}, oriPokemon?.eggGroups, oriPokemon?.varieties, oriPokemon?.isLegendary, oriPokemon?.isMythical, oriPokemon?.isBaby);
+    } catch (error) {
+        console.error("fetchVariety: Error fetching variety:", error);
         return null;
     }
-};
+}

@@ -67,6 +67,13 @@
     background-repeat: no-repeat; /* Prevent the glow from tiling */
 }
 
+.pokemonSprite.altHighlight {
+    background-image: url("../images/altGlow.png");
+    background-size: 100px 100px; /* Match the size of the Pokémon sprite */
+    background-position: center;
+    background-repeat: no-repeat; /* Prevent the glow from tiling */
+}
+
 /* Primary Types */
 
 [data-type="normal"] {
