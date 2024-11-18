@@ -1,15 +1,14 @@
 import './pokemon.css';
 import {useEffect, useState} from "react";
 import {fetchData} from './manageData.js';
-import {addToTeam, removeFromTeam, printTeamImages, PrintAllImages, formatName} from './manageDisplay.js'
+import {addToTeam, printTeamImages, PrintAllImages} from './manageDisplay.js'
 
 function App() {
-    const [data, setData] = useState("");
     const [api, setAPI] = useState([]);
     const [id, setID] = useState(null);
     const [team, setTeam] = useState([]);
-    const [note, setNote] = useState("");
     const [loading, setLoading] = useState(true);
+    const [note, setNote] = useState("");
 
     useEffect(() => {
         fetchData(setLoading, setAPI);
@@ -17,26 +16,23 @@ function App() {
 
     useEffect(() => {
         printTeamImages(setTeam, team);
-    }, [api]);
+    }, []);
 
     return (
         <div className="App backgroundBW">
-            <div> {printTeamImages(setTeam, team)} </div>
+            <div> {printTeamImages(setTeam, team, setNote, note)} </div>
             <input
-                placeholder="Pokemon ID"
+                className="search"
+                placeholder="Enter Pokémon Name/ID"
                 onChange={(event) => setID(event.target.value)}
                 onKeyDown={(event) => {
                     if (event.key === 'Enter') {
-                        addToTeam(id, setID, team, setTeam, setData, setNote);
+                        addToTeam(id, setID, team, setTeam, setNote);
                     }
                 }}
             />
-            <button onClick={() => addToTeam(id, setID, team, setTeam, setData, setNote)}>Add</button>
-            {team.map((member, index) => (
-                <h3 onClick={() => removeFromTeam(member, setTeam, team)} key={index}>{index + 1 + ". " + formatName(member?.name)}</h3>
-            ))}
-            <h3>{'>' + note}</h3>
-            <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setData={setData} setNote={setNote}/>
+            <button onClick={() => addToTeam(id, setID, team, setTeam, setNote)} className="search">Add</button>
+            <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setNote={setNote}/>
         </div>
     );
 }

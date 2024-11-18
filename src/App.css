@@ -45,6 +45,23 @@
           rgba(255, 255, 255, 1) 100%); /* Fully white at the bottom */
 }
 
+input.search {
+    width: 10rem;
+    height: 1.5rem;
+    padding-left: 0.5rem;
+    border: 0.1rem solid black;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+button.search {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-left: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
 .backgroundDefault {
   background-image: var(--bottom-fade-gradient), #282c34;
 }

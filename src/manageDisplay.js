@@ -3,50 +3,63 @@ import './pokemon.css';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import {useState} from "react";
-import {fetchVariety} from "./manageData";
+import {fetchPokemon, fetchVariety} from "./manageData";
 
-export const addToTeam = async (pokemon, setID, team, setTeam, setData, setNote) => {
-    if (pokemon == null) {
-        setNote("Not a valid Pokemon!");
+export const addToTeam = async (pokemon, setID, team, setTeam, setNote) => {
+    if (team.length < 6 && typeof pokemon === 'string') {
+        const fetchedPokemon = await fetchPokemon(convertToName(pokemon));
+        setTeam([...team, fetchedPokemon]);
     }
     else if (team.length < 6) {
         setTeam([...team, pokemon]);
-        setNote("");
+    }
+
+    if (team.length >= 5) {
+        setNote("Team is full!"); // TODO: Search currently broken, doesnt check properly for if pokemon name is valid.
+    }
+    else if (pokemon == null) {
+        setNote("Not a valid Pokemon!");
     }
     else {
-        setNote("Team is full!");
+        setNote("");
     }
 };
 
-export const removeFromTeam = (member, setTeam, team) => {
+export const removeFromTeam = (member, setTeam, team, setNote) => {
     for (let i = 0; i < team.length; i++) {
-        if (team[i] == member) { setTeam(team.filter((item, j) => j !== i)); }
+        if (team[i] === member) { setTeam(team.filter((item, j) => j !== i)); }
     }
+    setNote("");
 };
 
-export const printTeamImages = (setTeam, team) => {
+export const printTeamImages = (setTeam, team, setNote, note) => {
     if (!team.length) {
         return <p>No team members yet!</p>;
     }
     return (
         <div className="teamBorder">
-            {team.map((pokemon, index) => (
-                <img
-                    className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
-                    data-type={pokemon?.types[0]}
-                    data-type2={pokemon?.types[1] ? pokemon?.types[1] : ''}
-                    key={index}
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                    onClick={() => removeFromTeam(pokemon, setTeam, team)}
-                />
-            ))}
+            <div className="teamImages">
+                {team.map((pokemon, index) => (
+                    <figure className="item" key={index} onClick={() => removeFromTeam(pokemon, setTeam, team, setNote)}>
+                        <img
+                            className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
+                            data-type={pokemon?.types[0]}
+                            data-type2={pokemon?.types[1] ? pokemon?.types[1] : ''}
+                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
+                            alt={pokemon?.printName}
+                        />
+                        <figcaption className="caption">{pokemon?.printName}</figcaption>
+                    </figure>
+                ))}
+            </div>
+            <h3 className="note">{'>' + note}</h3>
         </div>
     );
 };
 
-export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, setNote }) => {
+export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) => {
     const [popup, setPopup] = useState(null);
-    const [hoveredPokemonId, setHoveredPokemonId] = useState(null); // Track which Pokémon is being hovered
+    const [hoveredPokemonId, setHoveredPokemonId] = useState(null);
 
     const handleMouseEnter = (pokemonId) => {
         setHoveredPokemonId(pokemonId);
@@ -62,12 +75,12 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
                 setPopup(pokemon);
             }
             else {
-                addToTeam(pokemon, setID, team, setTeam, setData, setNote);
+                addToTeam(pokemon, setID, team, setTeam, setNote);
             }
         }
         else if (e.nativeEvent.button === 2) {
             e.preventDefault();
-            removeFromTeam(pokemon, setTeam, team);
+            removeFromTeam(pokemon, setTeam, team, setNote);
         }
     };
 
@@ -79,12 +92,12 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
             <div className="groupBorder">
                 {api.map((pokemon) => (
                     <img
-                        className={`pokemonSprite ${team.some(member => member.id === pokemon.id) ? 'highlight' : ''} 
-                        ${hoveredPokemonId === pokemon.id ? 'altHighlight' : ''}`}
+                        className={`pokemonSprite ${team.some(member => member.id === pokemon?.id) ? 'highlight' : ''} 
+                        ${hoveredPokemonId === pokemon?.id ? 'altHighlight' : ''}`}
                         key={pokemon.id}
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
                         alt={pokemon?.printName}
-                        onMouseEnter={() => handleMouseEnter(pokemon.id)} // Pass the Pokémon's ID
+                        onMouseEnter={() => handleMouseEnter(pokemon?.id)} // Pass the Pokémon's ID
                         onMouseLeave={handleMouseLeave}
                         onClick={(e) => handleClick(e, pokemon)}
                         onContextMenu={(e) => handleClick(e, pokemon)}
@@ -94,14 +107,14 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setData, se
                     />
                 ))}
                 {popup && (
-                    <Popup open={popup !== null} onClose={() => setPopup(null)} position="center">
+                    <Popup open={true} onClose={() => setPopup(null)} position="center">
                         <ol>
                             {popup.varieties.map((variety, index) => (
                                 <li key = {index}>
                                     <button onClick={async () => {
                                         console.log("variety", variety);
                                         const newPokemon = await fetchVariety(variety, popup);
-                                        addToTeam(newPokemon, setID, team, setTeam, setData, setNote);
+                                        addToTeam(newPokemon, setID, team, setTeam, setNote);
                                         setPopup(null);
                                     }}>
                                         {formatName(variety)}
@@ -122,7 +135,6 @@ export const formatName = (name) => {
     const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-altered", "-cap",
         "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-", "nidoran-m", "nidoran-f"]
 
-    // Capitalize the first letter of each part
     const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
 
     if (capitalizedParts.length === 1) {
