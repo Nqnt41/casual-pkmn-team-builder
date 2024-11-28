@@ -2,10 +2,20 @@ import Axios from "axios";
 import {formatName} from './manageDisplay.js'
 import {Pokemon} from './pokemonInfo'
 
-export const fetchData = async (setLoading, setAPI) => {
+export const fetchData = async (pokedexIDs, setLoading, setAPI, api) => {
     setLoading(true);
-    const fetchedApi = await fetchPokedexAPI(setAPI, 1);
-    console.log("Fetched data", fetchedApi);
+
+    const newAPI = [];
+    for (const pokedexID of pokedexIDs) {
+        const fetchedAPI = await fetchPokedexAPI(pokedexID);
+        console.log("Fetched data at ", pokedexID, " is ", fetchedAPI);
+        if (fetchedAPI != null) {
+            newAPI.push(fetchedAPI);
+        }
+    }
+    console.log(api);
+
+    setAPI(newAPI);
     setLoading(false);
 };
 
@@ -34,10 +44,10 @@ const concurrencyLimitFetch = async (urls, limit) => {
     return Promise.all(results);
 };
 
-const fetchPokedexAPI = async (setAPI, pokedexId) => {
+const fetchPokedexAPI = async (pokedexID) => {
     try {
-        // TODO: for (const pokedexId of pokedexIds) {
-        const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexId}/`);
+        // TODO: for (const pokedexID of pokedexIDs) {
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexID}/`);
 
         const urls = res.data.pokemon_entries.map((entry) => {
             const speciesUrl = entry.pokemon_species.url;
@@ -48,26 +58,24 @@ const fetchPokedexAPI = async (setAPI, pokedexId) => {
         // Fetch in batches
         const fetchedData = await concurrencyLimitFetch(urls, 5);
 
-        const pokemonList = fetchedData.map(([pokemonData, speciesData]) => {
+        return fetchedData.map(([pokemonData, speciesData]) => {
             if (!pokemonData) {
                 return null;
-            }
-            else {
+            } else {
                 const printName = formatName(pokemonData.name);
                 const abilities = pokemonData.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
                 const stats = pokemonData.stats?.map((stat) => stat.base_stat) || [];
                 const types = pokemonData.types?.map((type) => type.type.name) || [];
                 if (!speciesData) {
-                    console.log(`fetchPokedexApi - ${pokemonData.name} does not have species-data section. Using default values.`);
-                    return new Pokemon(pokemonData.id, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                    console.log(`fetchPokedexAPI - ${pokemonData.name} does not have species-data section. Using default values.`);
+                    return new Pokemon(pokemonData.id, pokedexID, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
                         {}, [], [], false, false, false);
-                }
-                else {
+                } else {
                     const appearances = speciesData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
                     const eggGroups = speciesData.egg_groups?.map((group) => group.name) || [];
                     const varieties = speciesData.varieties?.map((variety) => variety.pokemon.name) || [];
 
-                    return new Pokemon(pokemonData.id, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
+                    return new Pokemon(pokemonData.id, pokedexID, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
                         abilities, stats, types, {}, eggGroups, varieties, speciesData.isLegendary, speciesData.isMythical, speciesData.isBaby);
                 }
 
@@ -77,13 +85,9 @@ const fetchPokedexAPI = async (setAPI, pokedexId) => {
                 varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
                  */
             }
-        }).filter(Boolean); // Remove any null values for failed requests
-
-        setAPI(pokemonList);
-        return pokemonList;
+        }).filter(Boolean);
     } catch (error) {
         console.error("FetchPokedexAPI: Error fetching API:", error);
-        setAPI([]);
         return [];
     }
 };
@@ -102,16 +106,31 @@ export const fetchPokemon = async (name) => {
         const types = pokemonData.types?.map((type) => type.type.name) || [];
 
         if (!speciesData) {
-            console.log(`fetchPokemon - ${pokemonData.name} does not have species-data section. Using default values.`);
-            return new Pokemon(pokemonData.id, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
-                {}, [], [], false, false, false);
+            if (pokemonData.species.name !== pokemonData.name) {
+                console.log(`fetchPokemon - ${pokemonData.name} is variety. Use species data from base species.`);
+
+                const baseRes = await Axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonData.species.name}/`);
+                const baseData = baseRes.data;
+
+                const appearances = baseData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
+                const eggGroups = baseData.egg_groups?.map((group) => group.name) || [];
+                const varieties = baseData.varieties?.map((variety) => variety.pokemon.name) || [];
+
+                return new Pokemon(pokemonData.id, -1, appearances, pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                    {}, eggGroups, varieties, baseData.isLegendary, baseData.isMythical, baseData.isBaby);
+            }
+            else {
+                console.log(`fetchPokemon - ${pokemonData.name} does not have species-data section. Using default values.`);
+                return new Pokemon(pokemonData.id, -1, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                    {}, [], [], false, false, false);
+            }
         }
         else {
             const appearances = speciesData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
             const eggGroups = speciesData.egg_groups?.map((group) => group.name) || [];
             const varieties = speciesData.varieties?.map((variety) => variety.pokemon.name) || [];
 
-            return new Pokemon(pokemonData.id, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
+            return new Pokemon(pokemonData.id, -1, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
                 abilities, stats, types, {}, eggGroups, varieties, speciesData.isLegendary, speciesData.isMythical, speciesData.isBaby);
         }
     } catch (error) {
@@ -133,7 +152,7 @@ export const fetchVariety = async (name, oriPokemon) => {
         console.log(`fetchVariety - ${res.data}`);
         console.log('types', types);
 
-        return new Pokemon(res.data.id, oriPokemon.appearances, res.data.name, printName, res.data.name, abilities, stats, types,
+        return new Pokemon(res.data.id, oriPokemon?.pokedexID, oriPokemon.appearances, res.data.name, printName, res.data.name, abilities, stats, types,
             {}, oriPokemon?.eggGroups, oriPokemon?.varieties, oriPokemon?.isLegendary, oriPokemon?.isMythical, oriPokemon?.isBaby);
     } catch (error) {
         console.error("fetchVariety: Error fetching variety:", error);

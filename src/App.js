@@ -1,7 +1,7 @@
 import './pokemon.css';
 import {useEffect, useState} from "react";
 import {fetchData} from './manageData.js';
-import {addToTeam, printTeamImages, PrintAllImages} from './manageDisplay.js'
+import {SearchBar, printTeamImages, PrintAllImages} from './manageDisplay.js'
 
 function App() {
     const [api, setAPI] = useState([]);
@@ -11,7 +11,7 @@ function App() {
     const [note, setNote] = useState("");
 
     useEffect(() => {
-        fetchData(setLoading, setAPI);
+        fetchData([2, 3], setLoading, setAPI, api);
     }, []);
 
     useEffect(() => {
@@ -20,18 +20,8 @@ function App() {
 
     return (
         <div className="App backgroundBW">
-            <div> {printTeamImages(setTeam, team, setNote, note)} </div>
-            <input
-                className="search"
-                placeholder="Enter Pokémon Name/ID"
-                onChange={(event) => setID(event.target.value)}
-                onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                        addToTeam(id, setID, team, setTeam, setNote);
-                    }
-                }}
-            />
-            <button onClick={() => addToTeam(id, setID, team, setTeam, setNote)} className="search">Add</button>
+            <div> {printTeamImages(setTeam, team, setNote, note, loading)} </div>
+            <SearchBar id={id} setID={setID} team={team} setTeam={setTeam} setNote={setNote} loading={loading}/>
             <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setNote={setNote}/>
         </div>
     );

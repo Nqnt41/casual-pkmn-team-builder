@@ -1,8 +1,9 @@
 export class Pokemon {
-    constructor(id = -1, appearances = [], name = "", printName = "", nickname = name,
+    constructor(id = -1, pokedexID = -1, appearances = [], name = "", printName = "", nickname = name,
                 abilities = [], stats = [], types = {}, coverage = {}, eggGroups = [],
                 varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
         this.id = id;
+        this.pokedexID = pokedexID;
         this.appearances = appearances;
         this.name = name;
         this.printName = printName;

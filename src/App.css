@@ -41,7 +41,7 @@
 :root {
   --bottom-fade-gradient:
           linear-gradient(to bottom,
-          rgba(255, 255, 255, 0) 95%, /* Transparent until 95% */
+          rgba(255, 255, 255, 0) 90%, /* Transparent until 90% */
           rgba(255, 255, 255, 1) 100%); /* Fully white at the bottom */
 }
 
@@ -64,6 +64,7 @@ button.search {
 
 .backgroundDefault {
   background-image: var(--bottom-fade-gradient), #282c34;
+  background-clip: content-box
 }
 
 .backgroundRBGY {
@@ -113,16 +114,13 @@ button.search {
 }
 
 .backgroundBW {
-    background-size: 100%, auto;
-    background-image:
-          url("../images/bg/bwSilhouettes.png"),
-          var(--bottom-fade-gradient),
-          linear-gradient(to right,
-          #676767 49.5%, /* Gray side */
-          #000000 49.5%, #000000 50.5%, /* Middle color stop for smoother transition */
-          #ffffff 50.5%); /* White side */
+  background-size: 100%, 100%;
+  background-image: var(--bottom-fade-gradient), url("../images/bg/pokemonBGTemplate.jpg");
+
+  background-color: #676767;
   background-blend-mode: normal;
-  background-repeat: repeat, no-repeat, no-repeat;
+  background-repeat: repeat;
+  padding: 15px;
 }
 
 .backgroundXY {
