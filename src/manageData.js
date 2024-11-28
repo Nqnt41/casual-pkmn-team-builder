@@ -1,78 +1,161 @@
 import Axios from "axios";
-import {convertToName} from './manageDisplay.js'
+import {formatName} from './manageDisplay.js'
+import {Pokemon} from './pokemonInfo'
 
-export const fetchData = async (setLoading, setAPI) => {
+export const fetchData = async (pokedexIDs, setLoading, setAPI, api) => {
     setLoading(true);
-    const fetchedAPI = await fetchAPI(setAPI);
-    await fetchSpeciesInfo(fetchedAPI, setAPI);
+
+    const newAPI = [];
+    for (const pokedexID of pokedexIDs) {
+        const fetchedAPI = await fetchPokedexAPI(pokedexID);
+        console.log("Fetched data at ", pokedexID, " is ", fetchedAPI);
+        if (fetchedAPI != null) {
+            newAPI.push(fetchedAPI);
+        }
+    }
+    console.log(api);
+
+    setAPI(newAPI);
     setLoading(false);
 };
 
-const fetchAPI = async (setAPI) => {
-    try {
-        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/?limit=1025`);
-        setAPI(res.data.results); // Adjust for correct data structure 1025
-        return res.data.results;
+const concurrencyLimitFetch = async (urls, limit) => {
+    const results = [];
+    const executing = new Set();
+
+    for (let i  = 0; i < urls.length; i++) {
+        const promise = Promise.all([
+            Axios.get(urls[i][0]).then((res) => res.data).catch((err) =>
+                console.error(`concurrencyLimitFetch: Error fetching pokemonUrl ${urls[i][0]} at ${i}`, err)),
+            Axios.get(urls[i][1]).then((res) => res.data).catch((err) =>
+                console.error(`concurrencyLimitFetch: Error fetching speciesUrl ${urls[i][0]} at ${i}`, err))
+        ]);
+
+        results.push(promise);
+        executing.add(promise);
+
+        promise.finally(() => executing.delete(promise));
+
+        if (executing.size >= limit) {
+            await Promise.race(executing);
+        }
     }
-    catch (error) {
-        console.error("FetchAPI: Error fetching API:", error);
-        setAPI([]);
+
+    return Promise.all(results);
+};
+
+const fetchPokedexAPI = async (pokedexID) => {
+    try {
+        // TODO: for (const pokedexID of pokedexIDs) {
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokedex/${pokedexID}/`);
+
+        const urls = res.data.pokemon_entries.map((entry) => {
+            const speciesUrl = entry.pokemon_species.url;
+            const pokemonUrl = entry.pokemon_species.url.replace('-species', '');
+            return [pokemonUrl, speciesUrl];
+        })
+
+        // Fetch in batches
+        const fetchedData = await concurrencyLimitFetch(urls, 5);
+
+        return fetchedData.map(([pokemonData, speciesData]) => {
+            if (!pokemonData) {
+                return null;
+            } else {
+                const printName = formatName(pokemonData.name);
+                const abilities = pokemonData.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
+                const stats = pokemonData.stats?.map((stat) => stat.base_stat) || [];
+                const types = pokemonData.types?.map((type) => type.type.name) || [];
+                if (!speciesData) {
+                    console.log(`fetchPokedexAPI - ${pokemonData.name} does not have species-data section. Using default values.`);
+                    return new Pokemon(pokemonData.id, pokedexID, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                        {}, [], [], false, false, false);
+                } else {
+                    const appearances = speciesData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
+                    const eggGroups = speciesData.egg_groups?.map((group) => group.name) || [];
+                    const varieties = speciesData.varieties?.map((variety) => variety.pokemon.name) || [];
+
+                    return new Pokemon(pokemonData.id, pokedexID, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
+                        abilities, stats, types, {}, eggGroups, varieties, speciesData.isLegendary, speciesData.isMythical, speciesData.isBaby);
+                }
+
+                /*
+                constructor(id = -1, appearances = [], name = "", printName = "", nickname = "",
+                abilities = [], stats = [], types = {}, coverage = {}, eggGroups = [],
+                varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
+                 */
+            }
+        }).filter(Boolean);
+    } catch (error) {
+        console.error("FetchPokedexAPI: Error fetching API:", error);
         return [];
     }
 };
 
-const fetchSpeciesInfo = async (fetchedAPI, setAPI) => {
-    const apiCopy = [...fetchedAPI];
-
-    for (let i  = apiCopy.length; i > 0; i--) {
-        const altForm = await checkAltForms(i);
-
-        for (let j  = 0; j < altForm.length; j++) {
-            apiCopy.splice(i, 0, altForm[j]);
-        }
-    }
-
-    setAPI(apiCopy);
-};
-
-const checkAltForms = async (id) => {
+export const fetchPokemon = async (name) => {
     try {
-        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-        const altForms = [];
-        for (let i = res.data.varieties?.length - 1; i >= 0; i--) {
-            if (!res.data.varieties[i].is_default && !res.data.varieties[i].pokemon.name.includes("totem")) {
-                altForms.push(res.data.varieties[i].pokemon);
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+        const pokemonData = res.data;
+        const speciesRes = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+        const speciesData = speciesRes.data;
+        console.log("res", pokemonData);
+
+        const printName = formatName(pokemonData.name);
+        const abilities = pokemonData.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
+        const stats = pokemonData.stats?.map((stat) => stat.base_stat) || [];
+        const types = pokemonData.types?.map((type) => type.type.name) || [];
+
+        if (!speciesData) {
+            if (pokemonData.species.name !== pokemonData.name) {
+                console.log(`fetchPokemon - ${pokemonData.name} is variety. Use species data from base species.`);
+
+                const baseRes = await Axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemonData.species.name}/`);
+                const baseData = baseRes.data;
+
+                const appearances = baseData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
+                const eggGroups = baseData.egg_groups?.map((group) => group.name) || [];
+                const varieties = baseData.varieties?.map((variety) => variety.pokemon.name) || [];
+
+                return new Pokemon(pokemonData.id, -1, appearances, pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                    {}, eggGroups, varieties, baseData.isLegendary, baseData.isMythical, baseData.isBaby);
+            }
+            else {
+                console.log(`fetchPokemon - ${pokemonData.name} does not have species-data section. Using default values.`);
+                return new Pokemon(pokemonData.id, -1, [], pokemonData.name, printName, pokemonData.name, abilities, stats, types,
+                    {}, [], [], false, false, false);
             }
         }
-        return altForms;
-    }
-    catch (error) {
-        console.error("checkAltForm: error fetching species", error);
-        return [];
+        else {
+            const appearances = speciesData.pokedex_numbers?.map((pokedex) => [pokedex.pokedex.name, pokedex.entry_number]) || [];
+            const eggGroups = speciesData.egg_groups?.map((group) => group.name) || [];
+            const varieties = speciesData.varieties?.map((variety) => variety.pokemon.name) || [];
+
+            return new Pokemon(pokemonData.id, -1, appearances, pokemonData.name, formatName(pokemonData.name), pokemonData.name,
+                abilities, stats, types, {}, eggGroups, varieties, speciesData.isLegendary, speciesData.isMythical, speciesData.isBaby);
+        }
+    } catch (error) {
+        console.error("fetchVariety: Error fetching variety:", error);
+        return null;
     }
 }
 
-export const fetchPokemonData = async (member, setData, setID) => {
+export const fetchVariety = async (name, oriPokemon) => {
     try {
-        if (typeof member !== 'number' && member.includes(' ')) {
-            member = convertToName(member);
-        }
-        if (!/^[\d\w\-\.\s]+$/.test(member)) {
-            console.error("fetchPokemonData: Invalid Pokemon name");
-            setData("");
-            setID(null);
-            return null;
-        }
-        else {
-            const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${member}`); // TODO: Search broken
-            setData(res.data);
-            return res.data;
-        }
-    }
-    catch (error) {
-        console.error("fetchPokemonData: Failed to fetch!", error);
-        setData("");
-        setID(null);
+        const res = await Axios.get(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+        console.log("res", res.data);
+
+        const printName = formatName(res.data.name);
+        const abilities = res.data.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
+        const stats = res.data.stats?.map((stat) => stat.base_stat) || [];
+        const types = res.data.types?.map((type) => type.type.name) || [];
+
+        console.log(`fetchVariety - ${res.data}`);
+        console.log('types', types);
+
+        return new Pokemon(res.data.id, oriPokemon?.pokedexID, oriPokemon.appearances, res.data.name, printName, res.data.name, abilities, stats, types,
+            {}, oriPokemon?.eggGroups, oriPokemon?.varieties, oriPokemon?.isLegendary, oriPokemon?.isMythical, oriPokemon?.isBaby);
+    } catch (error) {
+        console.error("fetchVariety: Error fetching variety:", error);
         return null;
     }
-};
+}
