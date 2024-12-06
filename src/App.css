@@ -55,11 +55,35 @@ input.search {
 }
 
 button.search {
-    height: 1.805rem;
+    height: 1.83rem;
     border: 0.1rem solid black;
     border-left: 0;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
+}
+
+input.removeTeam {
+    height: 1.5rem;
+    width: 5.5rem;
+    border: 0.1rem solid black;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    margin-left: 0.5rem;
+}
+
+button.addTeam {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+button.accessTeam {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
 }
 
 .backgroundDefault {

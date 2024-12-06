@@ -58,6 +58,59 @@ export const SearchBar = ( {id, setID, team, setTeam, setNote, loading} ) => {
     }
 }
 
+export const TeamStorage = ( { loading, setTeam, team, setStoredTeams, storedTeams, setNote } ) => {
+    const [teamToRemove, setTeamToRemove] = useState("");
+
+    const accessStoredTeam = (index) => {
+        setTeam(storedTeams[index]);
+    }
+
+    const addToStorage = () => {
+        if (team.length > 0 && storedTeams.length < 5) {
+            setStoredTeams([...storedTeams, team]);
+            setNote("");
+        }
+        else if (team.length <= 0) {
+            setNote("Team is empty, could not be stored.");
+        }
+        else if (storedTeams.length >= 56) {
+            console.log("length", storedTeams);
+            setNote("Maximum number of teams stored - remove one to make room!");
+        }
+    }
+
+    const removeFromStorage = (index) => {
+        if (!isNaN(index) && index >= 0 && index < storedTeams.length) {
+            console.log(storedTeams.length, index + 1)
+            setStoredTeams(storedTeams.filter((team, j) => j !== index));
+        }
+    }
+
+    if (!loading) {
+        return (
+            <div>
+                <button className="addTeam" onClick={() => addToStorage()}>Store Team</button>
+
+                {storedTeams.map((team, index) => (
+                    <button key={index + 1} className="accessTeam" onClick={() => accessStoredTeam(index)}>{index + 1}</button>
+                ))}
+
+                <input
+                    className="removeTeam"
+                    placeholder="Enter Number"
+                    onChange={(event) => setTeamToRemove(event.target.value)}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            removeFromStorage(Number(teamToRemove) - 1);
+                        }
+                    }}
+                />
+                <button onClick={() => removeFromStorage(Number(teamToRemove) - 1)} className="search">Remove</button>
+            </div>
+        );
+    }
+}
+
 export const printTeamImages = (setTeam, team, setNote, note, loading) => {
     if (!loading && !team.length) {
         return <div className="teamNote groupBorder">No team members yet!</div>;

@@ -1,3 +1,11 @@
+:root {
+    --sprite-width: 125px;
+}
+
+.popup {
+    --sprite-width: 75px;
+}
+
 .teamBorder {
     display: inline-flex;
     flex-direction: column;
@@ -5,7 +13,7 @@
     border: 4px solid yellow;
     border-radius: 15px;
     background-color: rgba(211, 211, 211, 0.7);
-    margin: 30px;
+    margin: 0.5rem;
     padding: 10px;
 }
 
@@ -76,31 +84,31 @@ figure.item {
 
 .teamSprite {
     z-index: 4;
+    width: var(--sprite-width);
     margin-left: 5px;
     margin-right: 5px;
-    width: 125px;
 }
 
 .behindSprite {
     z-index: 1;
-    width: 125px;
+    width: var(--sprite-width);
     border-radius: 50%;
     margin-left: 5px;
     margin-right: 5px;
     background-color: var(--type-color);
     background-image: url("../images/pokeballSymbol.png");
-    background-size: 127px 127px;
+    background-size: calc(var(--sprite-width) + 2px);
     background-position: center;
 }
 
 .behindSprite2 {
     z-index: 2;
-    width: 125px;
+    width: var(--sprite-width);
     margin-left: 5px;
     margin-right: 5px;
     /*background: -webkit-linear-gradient(var(--type-color), var(--type2-color));*/
     background:
-        url("../images/pokeballSymbol.png") center/127px 127px no-repeat, /* The Pokéball image */
+        url("../images/pokeballSymbol.png") no-repeat,
         linear-gradient(
                 /*to right,*/
                 var(--type-color) 0%,
@@ -108,20 +116,21 @@ figure.item {
                 var(--type2-color) 50%,
                 var(--type2-color) 100%
         );
+    background-size: calc(var(--sprite-width) + 2px);
 }
 
 .pokemonSprite.highlight {
     background-image: url("../images/glow.png");
-    background-size: 100px 100px; /* Match the size of the Pokémon sprite */
+    background-size: 100px 100px;
     background-position: center;
-    background-repeat: no-repeat; /* Prevent the glow from tiling */
+    background-repeat: no-repeat;
 }
 
 .pokemonSprite.altHighlight {
     background-image: url("../images/altGlow.png");
-    background-size: 100px 100px; /* Match the size of the Pokémon sprite */
+    background-size: 100px 100px;
     background-position: center;
-    background-repeat: no-repeat; /* Prevent the glow from tiling */
+    background-repeat: no-repeat;
 }
 
 /* Primary Types */
