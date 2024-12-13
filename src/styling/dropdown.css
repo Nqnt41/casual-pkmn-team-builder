@@ -1,0 +1,38 @@
+.checklist {
+    position: fixed;
+    background-color: white;
+    width: 10rem;
+    border: 0.2rem solid black;
+    padding-bottom: 5px;
+    left: 92.48%;
+    text-align: left;
+}
+
+.listButtonHighlight {
+    background-color: #eeeeee;
+}
+
+.mainButton {
+    border: 2px black;
+    border-bottom-style: solid;
+    box-sizing: content-box;
+    background-color: lightgray;
+    cursor: pointer;
+    width: 100%;
+    padding: 3px 0;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.mainButtonHighlight {
+    background-color: darkgray;
+}
+
+.empty {
+    display: none;
+}
+
+.hidePadding {
+    padding-bottom: 0;
+    border-bottom: 0.1rem solid black;
+}

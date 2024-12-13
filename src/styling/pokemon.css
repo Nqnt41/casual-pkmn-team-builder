@@ -1,15 +1,28 @@
+@import "typings.css";
+
 :root {
     --sprite-width: 125px;
 }
 
-.popup {
+.popupWindow {
+    background-color: darkslategray;
+    display: inline-flex;
+    border-radius: 10px;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 0.5rem;
+    padding: 10px;
     --sprite-width: 75px;
+}
+
+.popupWindow:empty {
+    display: none;
 }
 
 .teamBorder {
     display: inline-flex;
     flex-direction: column;
-    align-items: center;
     border: 4px solid yellow;
     border-radius: 15px;
     background-color: rgba(211, 211, 211, 0.7);
@@ -29,6 +42,7 @@ figure.item {
     text-align: center;
     margin: 0 10px;
     width: 125px;
+    cursor: pointer;
 }
 
 .caption {
@@ -40,14 +54,6 @@ figure.item {
 .note {
     margin-top: 15px;
     margin-bottom: 0;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-}
-
-.teamNote {
-    margin-top: 15px;
-    margin-bottom: 30px;
     font-size: 1.2em;
     font-weight: bold;
     text-align: center;
@@ -70,6 +76,7 @@ figure.item {
 .pokemonSprite {
     width: 100px;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 .generationText {
@@ -96,7 +103,7 @@ figure.item {
     margin-left: 5px;
     margin-right: 5px;
     background-color: var(--type-color);
-    background-image: url("../images/pokeballSymbol.png");
+    background-image: url("../../images/pokeballSymbol.png");
     background-size: calc(var(--sprite-width) + 2px);
     background-position: center;
 }
@@ -108,7 +115,7 @@ figure.item {
     margin-right: 5px;
     /*background: -webkit-linear-gradient(var(--type-color), var(--type2-color));*/
     background:
-        url("../images/pokeballSymbol.png") no-repeat,
+        url("../../images/pokeballSymbol.png") no-repeat,
         linear-gradient(
                 /*to right,*/
                 var(--type-color) 0%,
@@ -120,166 +127,15 @@ figure.item {
 }
 
 .pokemonSprite.highlight {
-    background-image: url("../images/glow.png");
+    background-image: url("../../images/glow.png");
     background-size: 100px 100px;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .pokemonSprite.altHighlight {
-    background-image: url("../images/altGlow.png");
+    background-image: url("../../images/altGlow.png");
     background-size: 100px 100px;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-/* Primary Types */
-
-[data-type="normal"] {
-    --type-color: #A8A77A;
-}
-
-[data-type="fighting"] {
-    --type-color: #C22E28;
-}
-
-[data-type="flying"] {
-    --type-color: #A98FF3;
-}
-
-[data-type="poison"] {
-    --type-color: #A33EA1;
-}
-
-[data-type="ground"] {
-    --type-color: #E2BF65;
-}
-
-[data-type="rock"] {
-    --type-color: #B6A136;
-}
-
-[data-type="bug"] {
-    --type-color: #A6B91A;
-}
-
-[data-type="ghost"] {
-    --type-color: #735797;
-}
-
-[data-type="steel"] {
-    --type-color: #B7B7CE;
-}
-
-[data-type="fire"] {
-    --type-color: #EE8130;
-}
-
-[data-type="water"] {
-    --type-color: #6390F0;
-}
-
-[data-type="grass"] {
-    --type-color: #7AC74C;
-}
-
-[data-type="electric"] {
-    --type-color: #F7D02C;
-}
-
-[data-type="psychic"] {
-    --type-color: #F95587;
-}
-
-[data-type="ice"] {
-    --type-color: #96D9D6;
-}
-
-[data-type="dragon"] {
-    --type-color: #6F35FC;
-}
-
-[data-type="dark"] {
-    --type-color: #705746;
-}
-
-[data-type="fairy"] {
-    --type-color: #D685AD;
-}
-
-[data-type="stellar"] {
-    --type-color: #40B5A5;
-}
-
-/* Secondary Types */
-[data-type2="normal"] {
-    --type2-color: #A8A77A;
-}
-
-[data-type2="fighting"] {
-    --type2-color: #C22E28;
-}
-
-[data-type2="flying"] {
-    --type2-color: #A98FF3;
-}
-
-[data-type2="poison"] {
-    --type2-color: #A33EA1;
-}
-
-[data-type2="ground"] {
-    --type2-color: #E2BF65;
-}
-
-[data-type2="rock"] {
-    --type2-color: #B6A136;
-}
-
-[data-type2="bug"] {
-    --type2-color: #A6B91A;
-}
-
-[data-type2="ghost"] {
-    --type2-color: #735797;
-}
-
-[data-type2="steel"] {
-    --type2-color: #B7B7CE;
-}
-
-[data-type2="fire"] {
-    --type2-color: #EE8130;
-}
-
-[data-type2="water"] {
-    --type2-color: #6390F0;
-}
-
-[data-type2="grass"] {
-    --type2-color: #7AC74C;
-}
-
-[data-type2="electric"] {
-    --type2-color: #F7D02C;
-}
-
-[data-type2="psychic"] {
-    --type2-color: #F95587;
-}
-
-[data-type2="ice"] {
-    --type2-color: #96D9D6;
-}
-
-[data-type2="dragon"] {
-    --type2-color: #6F35FC;
-}
-
-[data-type2="dark"] {
-    --type2-color: #705746;
-}
-
-[data-type2="fairy"] {
-    --type2-color: #D685AD;
 }

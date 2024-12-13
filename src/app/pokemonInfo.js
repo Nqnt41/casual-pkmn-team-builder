@@ -1,9 +1,113 @@
+const pokedexIDtoName = (pokedexID) => {
+    // https://pokeapi.co/api/v2/pokedex/?offset=0&limit=50
+    switch(pokedexID) {
+        // Error Case:
+        case -1:
+            return "Unspecified";
+
+        // Every Pokémon:
+        case 1:
+            return "National Pokédex";
+            // 1, 2, 3, 4, 6, 7, 8, 9, 11, 16, 21, 27, 31
+
+        // Kanto:
+        case 2:
+            return "Kanto Pokédex";
+        case 26:
+            return "Kanto Pokédex (Let's Go!)";
+
+        // Johto:
+        case 3:
+            return "Johto Pokédex";
+        case 7:
+            return "Johto Pokédex (HeartGold and SoulSilver)";
+
+        // Hoenn:
+        case 4:
+            return "Hoenn Pokédex";
+        case 15:
+            return "Hoenn Pokédex (Omega Ruby and Alpha Sapphire)";
+
+        // Sinnoh:
+        case 5:
+            return "Sinnoh Pokédex (Diamond and Pearl)";
+        case 6:
+            return "Sinnoh Pokédex (Platinum)";
+        case 30:
+            return "Hisuian Pokédex";
+
+        // Unova:
+        case 8:
+            return "Unova Pokédex (Black and White)";
+        case 9:
+            return "Unova Pokédex (Black and White 2)";
+
+        // Kalos:
+        case 11:
+            return "Kalos Pokédex";
+        case 12:
+            return "Central Kalos Pokédex";
+        case 13:
+            return "Coastal Kalos Pokédex";
+        case 14:
+            return "Mountain Kalos Pokédex";
+
+        // Alola (Sun and Moon):
+        case 16:
+            return "Alolan Pokédex (Sun and Moon)";
+        case 17:
+            return "Alolan Pokédex - Melemele Island (Sun and Moon)";
+        case 18:
+            return "Alolan Pokédex - Akala Island (Sun and Moon)";
+        case 19:
+            return "Alolan Pokédex - Ula'ula Island (Sun and Moon)";
+        case 20:
+            return "Alolan Pokédex - Poni Island (Sun and Moon)";
+
+        // Alola (Ultra Sun and Moon):
+        case 21:
+            return "Alolan Pokédex (Ultra Sun and Moon)";
+        case 22:
+            return "Alolan Pokédex - Melemele Island (Ultra Sun and Moon)";
+        case 23:
+            return "Alolan Pokédex - Akala Island (Ultra Sun and Moon)";
+        case 24:
+            return "Alolan Pokédex - Ula'ula Island (Ultra Sun and Moon)";
+        case 25:
+            return "Alolan Pokédex - Poni Island (Ultra Sun and Moon)";
+
+        // Galar:
+        case 27:
+            return "Galarian Pokédex";
+        case 28:
+            return "Galarian Pokédex - Isle of Armor";
+        case 29:
+            return "Galarian Pokédex - Crown Tundra";
+
+        // Paldea:
+        case 31:
+            return "Paldean Pokédex";
+        case 32:
+            return "Paldean Pokédex - Kitakami";
+        case 33:
+            return "Paldean Pokédex - Blueberry";
+    }
+}
+
+export class Pokedex {
+    constructor(id = -1, active = true, list = []) {
+        this.id = id;
+        this.name = pokedexIDtoName(id);
+        this.active = active;
+        this.list = list;
+    }
+}
+
 export class Pokemon {
-    constructor(id = -1, pokedexID = -1, appearances = [], name = "", printName = "", nickname = name,
+    constructor(id = -1, appearances = [], name = "", printName = "", nickname = name,
                 abilities = [], stats = [], types = {}, coverage = {}, eggGroups = [],
                 varieties = [], isLegendary = false, isMythical = false, isBaby = false) {
         this.id = id;
-        this.pokedexID = pokedexID;
         this.appearances = appearances;
         this.name = name;
         this.printName = printName;

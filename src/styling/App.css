@@ -1,0 +1,81 @@
+.App {
+  text-align: center;
+  background-color: skyblue;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+input.search {
+    width: 10rem;
+    height: 1.5rem;
+    padding-left: 0.5rem;
+    border: 0.1rem solid black;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+button.search {
+    height: 1.83rem;
+    border: 0.1rem solid black;
+    border-left: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    cursor: pointer;
+}
+
+input.removeTeam {
+    height: 1.5rem;
+    width: 5.5rem;
+    border: 0.1rem solid black;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+    margin-left: 0.5rem;
+}
+
+button.addTeam {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+button.accessTeam {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+}
+
+.pointing {
+    cursor: pointer;
+}
