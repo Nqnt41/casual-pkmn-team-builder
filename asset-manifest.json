@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/casual-pkmn-team-builder/,/static/css/main.86c68f59.css",
+    "main.js": "/casual-pkmn-team-builder/,/static/js/main.2d4cfd09.js",
+    "static/js/453.67212a98.chunk.js": "/casual-pkmn-team-builder/,/static/js/453.67212a98.chunk.js",
+    "static/media/pokemonBGTemplate.jpg": "/casual-pkmn-team-builder/,/static/media/pokemonBGTemplate.8def0b28e5bc39051391.jpg",
+    "static/media/rseSilhouettes.png": "/casual-pkmn-team-builder/,/static/media/rseSilhouettes.79663cf2fae4811c868b.png",
+    "static/media/altGlow.png": "/casual-pkmn-team-builder/,/static/media/altGlow.4c2b8811849993d60d52.png",
+    "static/media/glow.png": "/casual-pkmn-team-builder/,/static/media/glow.7e1b5271f4494a47ae35.png",
+    "static/media/pokeballSymbol.png": "/casual-pkmn-team-builder/,/static/media/pokeballSymbol.6f14a0828f078f498eaf.png",
+    "index.html": "/casual-pkmn-team-builder/,/index.html",
+    "main.86c68f59.css.map": "/casual-pkmn-team-builder/,/static/css/main.86c68f59.css.map",
+    "main.2d4cfd09.js.map": "/casual-pkmn-team-builder/,/static/js/main.2d4cfd09.js.map",
+    "453.67212a98.chunk.js.map": "/casual-pkmn-team-builder/,/static/js/453.67212a98.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.86c68f59.css",
+    "static/js/main.2d4cfd09.js"
+  ]
+}
