@@ -28,7 +28,7 @@ function App() {
 
     return (
         <div className="App backgroundBW">
-            <GenerationSelect api={api} setAPI={setAPI}/>
+            <GenerationSelect setAPI={setAPI} api={api} loading={loading}/>
             <TeamStorage loading={loading} setTeam={setTeam} team={team} setStoredTeams={setStoredTeams} storedTeams={storedTeams} setNote={setNote}/>
             <div> {printTeamImages(setTeam, team, setNote, note, loading)} </div>
             <SearchBar id={id} setID={setID} team={team} setTeam={setTeam} setNote={setNote} loading={loading}/>

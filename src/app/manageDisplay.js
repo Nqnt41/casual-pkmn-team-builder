@@ -134,9 +134,11 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
     }
 };
 
-export const GenerationSelect = ({ api, setAPI }) => {
+export const GenerationSelect = ({ setAPI, api, loading }) => {
     const [hover, setHover] = useState(false);
+    const [hoverIndex, setHoverIndex] = useState(null);
     const [listHidden, setListHidden] = useState(true);
+    const [dropText, setDropText] = useState("▲");
 
     const handleMouseEnter = () => {
         setHover(true);
@@ -145,6 +147,15 @@ export const GenerationSelect = ({ api, setAPI }) => {
     const handleMouseLeave = () => {
         setHover(false);
     };
+
+    const changeDropdownLogo = () => {
+        if (dropText === "▲") {
+            setDropText("▼");
+        }
+        else {
+            setDropText("▲");
+        }
+    }
 
     const changeActiveStatus = (index) => {
         setAPI((api) => {
@@ -163,26 +174,32 @@ export const GenerationSelect = ({ api, setAPI }) => {
         });
     };
 
-    return (
-        <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
-            <div
-                className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
-                onMouseEnter={() => handleMouseEnter()}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => {setListHidden(!listHidden)}}
-            >
-                Pokedex Select
-            </div>
-            <span className={`${listHidden ? 'empty' : ''}`}>
+    if (!loading) {
+        return (
+            <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
+                <div
+                    className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
+                    onMouseEnter={() => handleMouseEnter()}
+                    onMouseLeave={() => handleMouseLeave()}
+                    onClick={() => {
+                        changeDropdownLogo();
+                        setListHidden(!listHidden)
+                    }}
+                >
+                    {dropText + " Pokedex Select"}
+                </div>
+                <span className={`${listHidden ? 'empty' : ''}`}>
                 {api.map((pokedex, index) => (
-                    <div>
+                    <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
                         <label>
-                            <input className="pointing" type="checkbox" checked={pokedex.active} onChange={() => changeActiveStatus(index)} />
+                            <input className="checkbox" type="checkbox" checked={pokedex.active}
+                                   onChange={() => changeActiveStatus(index)}/>
                             <span className="pointing">{pokedex.name}</span>
                         </label>
                     </div>
                 ))}
             </span>
-        </div>
-    );
+            </div>
+        );
+    }
 }

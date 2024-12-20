@@ -12,6 +12,7 @@ export const addToTeam = async (pokemon, setID, team, setTeam, setNote) => {
         if (fetchedPokemon !== null) {
             setTeam([...team, fetchedPokemon]);
             localStorage.setItem('team', JSON.stringify([...team, fetchedPokemon]));
+            playCry(fetchedPokemon);
         }
         else {
             setNote("Not a valid Pokemon!");
@@ -20,6 +21,7 @@ export const addToTeam = async (pokemon, setID, team, setTeam, setNote) => {
     else if (team.length < 6) {
         setTeam([...team, pokemon]);
         localStorage.setItem('team', JSON.stringify([...team, pokemon]));
+        playCry(pokemon);
     }
 
     if (team.length >= 5) {
@@ -39,6 +41,7 @@ export const removeFromTeam = (member, setTeam, team, setNote) => {
             const newTeam = team.filter((item, j) => j !== i);
             setTeam(newTeam);
             localStorage.setItem('team', JSON.stringify(newTeam));
+            playCry(member);
         }
     }
     setNote("");
@@ -127,4 +130,12 @@ export const TeamStorage = ( { loading, setTeam, team, setStoredTeams, storedTea
             </div>
         );
     }
+}
+
+const playCry = (pokemon) => {
+    const sound = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemon?.id}.ogg`);
+    sound.volume = 0.3;
+    sound.play().catch((err) => {
+        console.error(`addToTeam - playCry: Error playing the cry of pokemon ${pokemon?.name}:`, err);
+    });
 }
