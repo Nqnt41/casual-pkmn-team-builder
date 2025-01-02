@@ -1,13 +1,13 @@
 import '../styling/App.css';
 import '../styling/pokemon.css';
-import '../styling/backgrounds.css';
-import '../styling/dropdown.css';
+import './styling/backgrounds.css';
+import './styling/dropdown.css';
 import 'reactjs-popup/dist/index.css';
 
 import Popup from 'reactjs-popup';
 import {useState} from "react";
 import {fetchVariety} from "./manageData";
-import {formatName} from './textParsing.js';
+import {formatName} from '../textParsing.js';
 import {addToTeam, removeFromTeam} from './manageTeam.js';
 
 export const SearchBar = ( {id, setID, team, setTeam, setNote, loading} ) => {
@@ -116,7 +116,6 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
                         <li key={index}>
                             <button
                                 onClick={async () => {
-                                console.log("variety", variety);
                                 const newPokemon = await fetchVariety(variety, popup);
                                 addToTeam(newPokemon, setID, team, setTeam, setNote);
                                 setPopup(null);
@@ -134,9 +133,8 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
     }
 };
 
-export const GenerationSelect = ({ setAPI, api, loading }) => {
+export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) => {
     const [hover, setHover] = useState(false);
-    const [hoverIndex, setHoverIndex] = useState(null);
     const [listHidden, setListHidden] = useState(true);
     const [dropText, setDropText] = useState("▲");
 
@@ -186,19 +184,22 @@ export const GenerationSelect = ({ setAPI, api, loading }) => {
                         setListHidden(!listHidden)
                     }}
                 >
-                    {dropText + " Pokedex Select"}
+                    {dropText + " Pokédex Select"}
                 </div>
                 <span className={`${listHidden ? 'empty' : ''}`}>
-                {api.map((pokedex, index) => (
-                    <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
-                        <label>
-                            <input className="checkbox" type="checkbox" checked={pokedex.active}
-                                   onChange={() => changeActiveStatus(index)}/>
-                            <span className="pointing">{pokedex.name}</span>
-                        </label>
-                    </div>
-                ))}
-            </span>
+                    {api.map((pokedex, index) => (
+                        <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
+                            <label>
+                                <input className="checkbox" type="checkbox" checked={pokedex.active}
+                                       onChange={() => changeActiveStatus(index)}/>
+                                <span className="pointing">{pokedex.name}</span>
+                            </label>
+                        </div>
+                    ))}
+                    {backgroundLoading && (
+                        <div className="topBorder">Loading Alternate Pokédex Entries...</div>
+                    )}
+                </span>
             </div>
         );
     }

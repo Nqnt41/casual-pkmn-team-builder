@@ -103,7 +103,7 @@ figure.item {
     margin-left: 5px;
     margin-right: 5px;
     background-color: var(--type-color);
-    background-image: url("../../images/pokeballSymbol.png");
+    background-image: url("../../../images/pokeballSymbol.png");
     background-size: calc(var(--sprite-width) + 2px);
     background-position: center;
 }
@@ -115,7 +115,7 @@ figure.item {
     margin-right: 5px;
     /*background: -webkit-linear-gradient(var(--type-color), var(--type2-color));*/
     background:
-        url("../../images/pokeballSymbol.png") no-repeat,
+        url("../../../images/pokeballSymbol.png") no-repeat,
         linear-gradient(
                 /*to right,*/
                 var(--type-color) 0%,
@@ -127,14 +127,14 @@ figure.item {
 }
 
 .pokemonSprite.highlight {
-    background-image: url("../../images/glow.png");
+    background-image: url("../../../images/glow.png");
     background-size: 100px 100px;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .pokemonSprite.altHighlight {
-    background-image: url("../../images/altGlow.png");
+    background-image: url("../../../images/altGlow.png");
     background-size: 100px 100px;
     background-position: center;
     background-repeat: no-repeat;

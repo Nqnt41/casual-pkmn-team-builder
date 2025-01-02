@@ -1,24 +1,35 @@
 import Axios from "axios";
-import {formatName} from './textParsing.js'
-import {Pokedex, Pokemon} from './pokemonInfo'
+import {formatName} from '../textParsing.js'
+import {Pokedex, Pokemon} from '../pokemonInfo'
 
-export const fetchData = async (pokedexIDs, setLoading, setAPI, api) => {
-    setLoading(true);
+export const fetchInitialData = async (game, setLoading, setBackgroundLoading, setAPI, api, setConfirmed, confirmed) => {
+    const allGames = [1, 2, 3, 4, 6, 7, 8, 9, 11, 16, 21, 27, 31];
 
+    if(!confirmed) {
+        setLoading(true);
+        await fetchData([game], true, setLoading, setAPI, api);
+        setLoading(false);
+
+        setBackgroundLoading(true);
+        await fetchData(allGames.filter(item => item !== game), false, setLoading, setAPI, api);
+        setBackgroundLoading(false);
+
+        setConfirmed(true);
+    }
+};
+
+export const fetchData = async (pokedexIDs, isActive, setLoading, setAPI, api) => {
     const newAPI = [];
     for (const pokedexID of pokedexIDs) {
         const fetchedAPI = await fetchPokedexAPI(pokedexID);
-        const fetchedPokedex = new Pokedex(pokedexID, true, fetchedAPI);
+        const fetchedPokedex = new Pokedex(pokedexID, isActive, fetchedAPI);
 
         if (fetchedAPI != null) {
             newAPI.push(fetchedPokedex);
         }
     }
 
-    setAPI(newAPI);
-    localStorage.setItem('api', JSON.stringify(newAPI));
-
-    setLoading(false);
+    setAPI((prevAPI) => [...prevAPI, ...newAPI]);
 };
 
 const concurrencyLimitFetch = async (urls, limit) => {

@@ -1,0 +1,34 @@
+.bg {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 1) 100%),
+                      url('../../../../images/bg/map.png');
+    background-size: 100%, 100%;
+    min-height: 100vh;
+    background-color: #676767;
+    background-blend-mode: normal;
+    background-repeat: repeat;
+    padding-top: 0.5px;
+    padding-bottom: 25px;
+}
+
+.textMargin {
+    margin-left: 10px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 10px;
+    justify-items: center;
+    padding: 0 15px;
+}
+
+.selection {
+    border: black solid 5px;
+    border-radius: 5px;
+    background-color: #dedede;
+    width: 350px;
+    margin-top: 3px;
+    margin-left: 2px;
+    margin-right: 2px;
+    cursor: pointer;
+}
