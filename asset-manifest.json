@@ -1,20 +1,35 @@
 {
   "files": {
-    "main.css": "/casual-pkmn-team-builder/static/css/main.d9a12fe3.css",
-    "main.js": "/casual-pkmn-team-builder/static/js/main.6b7942af.js",
-    "static/js/453.67212a98.chunk.js": "/casual-pkmn-team-builder/static/js/453.67212a98.chunk.js",
+    "main.css": "/casual-pkmn-team-builder/static/css/main.46724986.css",
+    "main.js": "/casual-pkmn-team-builder/static/js/main.8541ab18.js",
+    "static/js/453.013b6f9a.chunk.js": "/casual-pkmn-team-builder/static/js/453.013b6f9a.chunk.js",
+    "static/media/16.png": "/casual-pkmn-team-builder/static/media/16.3695b5417cd3fcca1e14.png",
+    "static/media/7.png": "/casual-pkmn-team-builder/static/media/7.4ed1a43c23fc9f9a9f33.png",
+    "static/media/21.png": "/casual-pkmn-team-builder/static/media/21.b6d5b46aa34d7f142f0f.png",
+    "static/media/15.png": "/casual-pkmn-team-builder/static/media/15.76e9b75d3f57937b75b3.png",
+    "static/media/10.png": "/casual-pkmn-team-builder/static/media/10.0c505d6f59c99b228d63.png",
+    "static/media/31.png": "/casual-pkmn-team-builder/static/media/31.5c75c559764e0f118211.png",
+    "static/media/9.png": "/casual-pkmn-team-builder/static/media/9.a35ce17f74f6a1ed48e7.png",
+    "static/media/2.png": "/casual-pkmn-team-builder/static/media/2.c30d4ca1554765b81112.png",
+    "static/media/3.png": "/casual-pkmn-team-builder/static/media/3.d38ef28e53553370d43e.png",
+    "static/media/8.png": "/casual-pkmn-team-builder/static/media/8.ebfcbdfb598368170ef6.png",
+    "static/media/6.png": "/casual-pkmn-team-builder/static/media/6.f46fb65b29f73cbd49e9.png",
+    "static/media/4.png": "/casual-pkmn-team-builder/static/media/4.daa7674b1be7a0c37d71.png",
+    "static/media/1.png": "/casual-pkmn-team-builder/static/media/1.e4159bbd4a3ddec6a37f.png",
+    "static/media/27.png": "/casual-pkmn-team-builder/static/media/27.0c6e826bdd60813421d5.png",
+    "static/media/map.png": "/casual-pkmn-team-builder/static/media/map.808f78f829d3ecb8cb86.png",
     "static/media/pokemonBGTemplate.jpg": "/casual-pkmn-team-builder/static/media/pokemonBGTemplate.8def0b28e5bc39051391.jpg",
     "static/media/rseSilhouettes.png": "/casual-pkmn-team-builder/static/media/rseSilhouettes.79663cf2fae4811c868b.png",
     "static/media/altGlow.png": "/casual-pkmn-team-builder/static/media/altGlow.4c2b8811849993d60d52.png",
     "static/media/glow.png": "/casual-pkmn-team-builder/static/media/glow.7e1b5271f4494a47ae35.png",
     "static/media/pokeballSymbol.png": "/casual-pkmn-team-builder/static/media/pokeballSymbol.6f14a0828f078f498eaf.png",
     "index.html": "/casual-pkmn-team-builder/index.html",
-    "main.d9a12fe3.css.map": "/casual-pkmn-team-builder/static/css/main.d9a12fe3.css.map",
-    "main.6b7942af.js.map": "/casual-pkmn-team-builder/static/js/main.6b7942af.js.map",
-    "453.67212a98.chunk.js.map": "/casual-pkmn-team-builder/static/js/453.67212a98.chunk.js.map"
+    "main.46724986.css.map": "/casual-pkmn-team-builder/static/css/main.46724986.css.map",
+    "main.8541ab18.js.map": "/casual-pkmn-team-builder/static/js/main.8541ab18.js.map",
+    "453.013b6f9a.chunk.js.map": "/casual-pkmn-team-builder/static/js/453.013b6f9a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d9a12fe3.css",
-    "static/js/main.6b7942af.js"
+    "static/css/main.46724986.css",
+    "static/js/main.8541ab18.js"
   ]
 }
