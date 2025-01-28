@@ -18,7 +18,7 @@ export const fetchInitialData = async (game, setLoading, setBackgroundLoading, s
     }
 };
 
-export const fetchData = async (pokedexIDs, isActive, setLoading, setAPI, api) => {
+export const fetchData = async (pokedexIDs, isActive, setLoading, setAPI) => {
     const newAPI = [];
     for (const pokedexID of pokedexIDs) {
         const fetchedAPI = await fetchPokedexAPI(pokedexID);
@@ -28,6 +28,8 @@ export const fetchData = async (pokedexIDs, isActive, setLoading, setAPI, api) =
             newAPI.push(fetchedPokedex);
         }
     }
+
+    console.log(newAPI);
 
     setAPI((prevAPI) => [...prevAPI, ...newAPI]);
 };
@@ -155,9 +157,6 @@ export const fetchVariety = async (name, oriPokemon) => {
         const abilities = res.data.abilities?.map((ability) => [ability.ability.name, ability.is_hidden]) || [];
         const stats = res.data.stats?.map((stat) => stat.base_stat) || [];
         const types = res.data.types?.map((type) => type.type.name) || [];
-
-        console.log(`fetchVariety - ${res.data}`);
-        console.log('types', types);
 
         return new Pokemon(res.data.id, oriPokemon.appearances, res.data.name, printName, res.data.name, abilities, stats, types,
             {}, oriPokemon?.eggGroups, oriPokemon?.varieties, oriPokemon?.isLegendary, oriPokemon?.isMythical, oriPokemon?.isBaby);

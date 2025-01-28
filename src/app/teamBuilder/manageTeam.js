@@ -1,5 +1,5 @@
-import './../styling/App.css';
-import './../styling/pokemon.css';
+import './styling/App.css';
+import './styling/pokemon.css';
 import './styling/dropdown.css';
 
 import {useState} from "react";

@@ -1,12 +1,12 @@
-import '../styling/App.css';
-import '../styling/pokemon.css';
+import './styling/App.css';
+import './styling/pokemon.css';
 import './styling/backgrounds.css';
 import './styling/dropdown.css';
 import 'reactjs-popup/dist/index.css';
 
 import Popup from 'reactjs-popup';
 import {useState} from "react";
-import {fetchVariety} from "./manageData";
+import {fetchVariety} from "./manageData.js";
 import {formatName} from '../textParsing.js';
 import {addToTeam, removeFromTeam} from './manageTeam.js';
 
@@ -36,20 +36,19 @@ export const printTeamImages = (setTeam, team, setNote, note, loading) => {
             <div className="teamBorder">
                 <div className="teamImages">
                     {team.map((pokemon, index) => (
-                        <figure className="item" key={index}
-                                onClick={() => removeFromTeam(pokemon, setTeam, team, setNote)}>
+                        <figure className="item" key={index} onClick={() => removeFromTeam(pokemon, setTeam, team, setNote)}>
                             <img
-                                className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
-                                data-type={pokemon?.types[0]}
-                                data-type2={pokemon?.types[1] ? pokemon?.types[1] : ''}
+                                className={`teamSprite behindSprite ${pokemon?.types?.[1]?.name ? 'behindSprite2' : ''} pokeballSymbol`}
+                                data-type={pokemon?.types?.[0]?.name || ""}
+                                data-type2={pokemon?.types?.[1]?.name || ""}
                                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                                alt={pokemon?.printName}
+                                alt={pokemon?.printName || "Unknown Pokémon"}
                             />
-                            <figcaption className="caption">{pokemon?.printName}</figcaption>
+                            <figcaption className="caption">{pokemon?.printName || "Unknown"}</figcaption>
                         </figure>
                     ))}
                 </div>
-                <h3 className="note">{'>' + note}</h3>
+                <h3 className="note">{note}</h3>
             </div>
         );
     }
@@ -90,23 +89,23 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
             <div>
                 {api.map((pokedex, outerIndex) => pokedex.active && (
                     <div key={outerIndex} className="groupBorder">
-                    <h1 className="generationText">{pokedex?.name}</h1>
-                    {pokedex?.list.map((pokemon) => (
-                        <img
-                            className={`pokemonSprite ${team.some((member) => member.id === pokemon?.id) ? 'highlight' : ''} 
-                                ${hoveredPokemonId === pokemon?.id ? 'altHighlight' : ''}`}
-                            key={pokemon.id}
-                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                            alt={pokemon?.printName}
-                            onMouseEnter={() => handleMouseEnter(pokemon?.id)}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={(e) => handleClick(e, pokemon)}
-                            onContextMenu={(e) => handleClick(e, pokemon)}
-                            onError={(e) => {
-                                e.target.style.display = "none";
-                            }}
-                        />
-                    ))}
+                        <h1 className="generationText">{pokedex?.name}</h1>
+                        <div className="pokemonListWrapper">
+                            {pokedex?.list.map((pokemon) => (
+                                <img
+                                    className={`pokemonSprite ${team.some((member) => member.id === pokemon?.id) ? 'highlight' : ''} 
+                                        ${hoveredPokemonId === pokemon?.id ? 'altHighlight' : ''}`}
+                                    key={pokemon.id}
+                                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
+                                    alt={pokemon?.printName}
+                                    onMouseEnter={() => handleMouseEnter(pokemon?.id)}
+                                    onMouseLeave={() => handleMouseLeave}
+                                    onClick={(e) => handleClick(e, pokemon)}
+                                    onContextMenu={(e) => handleClick(e, pokemon)}
+                                    onError={(e) => { e.target.style.display = "none"; }}
+                                />
+                            ))}
+                        </div>
                     </div>
                 ))}
                 {popup && (
@@ -137,14 +136,6 @@ export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) =>
     const [hover, setHover] = useState(false);
     const [listHidden, setListHidden] = useState(true);
     const [dropText, setDropText] = useState("▲");
-
-    const handleMouseEnter = () => {
-        setHover(true);
-    };
-
-    const handleMouseLeave = () => {
-        setHover(false);
-    };
 
     const changeDropdownLogo = () => {
         if (dropText === "▲") {
@@ -177,8 +168,8 @@ export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) =>
             <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
                 <div
                     className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
-                    onMouseEnter={() => handleMouseEnter()}
-                    onMouseLeave={() => handleMouseLeave()}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
                     onClick={() => {
                         changeDropdownLogo();
                         setListHidden(!listHidden)
@@ -190,8 +181,7 @@ export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) =>
                     {api.map((pokedex, index) => (
                         <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
                             <label>
-                                <input className="checkbox" type="checkbox" checked={pokedex.active}
-                                       onChange={() => changeActiveStatus(index)}/>
+                                <input className="checkbox" type="checkbox" checked={pokedex.active} onChange={() => changeActiveStatus(index)}/>
                                 <span className="pointing">{pokedex.name}</span>
                             </label>
                         </div>

@@ -1,4 +1,5 @@
-import '../styling/pokemon.css';
+import './styling/pokemon.css';
+
 import {useEffect, useState} from "react";
 import {useLocation} from 'react-router-dom';
 import {fetchInitialData} from './manageData.js';
@@ -9,6 +10,7 @@ import {pullLocalStorage} from './dataStorage.js';
 function BuildTeam() {
     const [api, setAPI] = useState([]);
     const [confirmed, setConfirmed] = useState(false);
+    const [filters, setFilters] = useState([]); // [ [allowedTypes] ]
 
     const [id, setID] = useState(null);
     const [team, setTeam] = useState([]);
@@ -42,7 +44,7 @@ function BuildTeam() {
                          setTeam={setTeam} team={team} setStoredTeams={setStoredTeams} storedTeams={storedTeams} setNote={setNote}/>
             <div> {printTeamImages(setTeam, team, setNote, note, loading)} </div>
             <SearchBar id={id} setID={setID} team={team} setTeam={setTeam} setNote={setNote} loading={loading}/>
-            <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setNote={setNote}/>
+            <PrintAllImages api={api} loading={loading} setID={setID} team={team} setTeam={setTeam} setNote={setNote} filters={filters}/>
         </div>
     );
 }
