@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+<a name="readme-top"></a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#built-with">Prerequisites and Local Installation</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-## Available Scripts
+## Hosted at https://nqnt41.github.io/casual-pkmn-team-builder/
 
-In the project directory, you can run:
+## About The Project
 
-### `npm start`
+This project is a custom React team builder for the Pokémon series of video games, intended to allow users to create and customize their ideal teams of six Pokémon. This is done by utilizing and manipulating the data pulled from the RESTful open-source API entitled the [PokéAPI](https://pokeapi.co/) - a massive online database of information spanning all forms of Pokémon media.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Information on every Pokémon for the selected game is attained by the team builder program and stored via a collection of Pokémon objects containing the key information on each creature, including name, Pokédex entry, typing, game location, and more.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+By either searching for a Pokémon using its name or National Pokédex ID number, or by manually browsing the collection of Pokémon sprites on the HTML grid and left clicking the desired Pokémon, that creature will be added to the current team. A team in the application can contain a maximum of six Pokémon at a time. 
 
-### `npm test`
+A user's current team can be stored by the program through the Store Team button at the top of the UI. Up to five teams of Pokémon can be stored in this way at a time. Use of LocalStorage allows this data to be held on subsequent visits to the hosting page. By inputting the number of the team to be removed and hitting either Enter or the Remove key, a stored team can be removed to make space for more teams.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The top of the UI also bears a button allowing the user to decide which Pokédex's worth of Pokémon should be displayed, which is useful for if a user wants to consider Pokémon from multiple regions. 
 
-### `npm run build`
+Finally, by left clicking on the Pokémon present in the user's current team will allow for the removal of that Pokémon from the team. Right clicking on the Pokémon within the HTML grid achieves the same effect.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Built With
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This program was built with the React framework, which combines JavaScript, CSS, and HTML elements.
 
-### `npm run eject`
+Plans are also being made to incorporate database support into the project for storing, accessing, and sharing teams alongside user authentication, likely through the use of Google Firebase.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Prerequisites and Local Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* After creating a local repository, the following command can be used to pull the program from GitHub for use on a personal system
+  ```sh
+  git init
+  git remote add https://github.com/Nqnt41/casual-pkmn-team-builder.git
+  git pull origin master
+  ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* Dependencies for running the project locally can be installed simply by using the command:
+  ```sh
+  npm install npm@latest -g
+  ```
 
-## Learn More
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Roadmap
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Completed:
+- [x] Set up basic UI and PokéAPI data access.
+- [x] Implement team system - limit to six Pokémon per team and allow the Pokéball symbol behind them to reflect the colors of their types.
+- [x] Create system to store Pokémon types and set color codes per type.
+- [x] Implement search function.
+- [x] Allow access to Pokémon variant forms and create popup window for easy selection of these variants.
+- [x] Allow saving of five teams at a time.
+- [x] Implement LocalStorage to maintain user selections on page refresh or reaccess.
+- [x] Implement page to choose a starting generation to decrease loading times before program can be utilized.
 
-### Code Splitting
+In-Progress:
+- [ ] Implement database support, likely with Google Firebase. Allow user sign-in, storage of up to five teams, accessing of those teams, as well as ability to share teams with others via a seed.
+- [ ] Develop dynamic type chart to show a team's strengths and weaknesses.
+- [ ] Create more themes for the page beyond the current default theming - one for each main-series game.
+- [ ] Allow filtering through Pokémon based on typing, states, weaknesses, evolution level, and more.
+- [ ] Create system to display detailed info for each Pokémon selected for one's team, in particular features such as location per game that would be useful for casual players.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+See the [open issues](https://github.com/Nqnt41/casual-pkmn-team-builder/issues) for a full list of proposed features (and known issues).
 
-### Analyzing the Bundle Size
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Contact
 
-### Making a Progressive Web App
+Ryan Coveny - please contact me with any concerns via ryanpcoveny@gmail.com
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Project Link: [https://github.com/Nqnt41/casual-pkmn-team-builder](https://github.com/Nqnt41/casual-pkmn-team-builder)
 
-### Advanced Configuration
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Acknowledgments
 
-### Deployment
+All data used in this project is provided by [PokéAPI](https://pokeapi.co/), and all credit for such data lies with them.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
