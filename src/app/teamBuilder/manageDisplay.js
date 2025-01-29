@@ -42,7 +42,16 @@ export const printTeamImages = (setTeam, team, setNote, note, loading) => {
                                 data-type={pokemon?.types?.[0]?.name || ""}
                                 data-type2={pokemon?.types?.[1]?.name || ""}
                                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
-                                alt={pokemon?.printName || "Unknown Pokémon"}
+                                onError={(e) => {
+                                    if (!e.target.src.includes("sprites/pokemon/other/official-artwork")) {
+                                        e.target.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon?.id}.png`;
+                                    }
+                                    else {
+                                        e.target.src = "";
+                                        e.target.alt = pokemon?.printName || "Unknown Pokémon";
+                                    }
+                                    e.target.onerror = null;
+                                }}
                             />
                             <figcaption className="caption">{pokemon?.printName || "Unknown"}</figcaption>
                         </figure>
@@ -93,7 +102,7 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
                         <div className="pokemonListWrapper">
                             {pokedex?.list.map((pokemon) => (
                                 <img
-                                    className={`pokemonSprite ${team.some((member) => member.id === pokemon?.id) ? 'highlight' : ''} 
+                                    className={`pokemonSprite ${team.some((member) => member.varieties?.some((variety) => variety === pokemon?.name)) ? 'highlight' : ''} 
                                         ${hoveredPokemonId === pokemon?.id ? 'altHighlight' : ''}`}
                                     key={pokemon.id}
                                     src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}

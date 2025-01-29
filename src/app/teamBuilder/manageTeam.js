@@ -107,8 +107,8 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
                     {hoverTeam.map((pokemon, index) => (
                         <img
                             className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
-                            data-type={pokemon?.types[0]}
-                            data-type2={pokemon?.types[1] ? pokemon?.types[1] : ''}
+                            data-type={pokemon?.types?.[0]?.name || ""}
+                            data-type2={pokemon?.types?.[1]?.name || ""}
                             onMouseEnter={() => handleMouseEnter(index)}
                             onMouseLeave={handleMouseLeave}
                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon?.id}.png`}
