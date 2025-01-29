@@ -3,15 +3,26 @@ import {formatName} from '../textParsing.js'
 import {Pokedex, Pokemon} from '../pokemonInfo'
 
 export const fetchInitialData = async (game, setLoading, setBackgroundLoading, setAPI, api, setConfirmed, confirmed) => {
-    const allGames = [1, 2, 3, 4, 6, 7, 8, 9, 11, 16, 21, 27, 31];
+    const allGames = [1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14, 16, 21, 27, 31];
 
-    if(!confirmed) {
+    if (!confirmed) {
         setLoading(true);
-        await fetchData([game], true, setLoading, setAPI, api);
+
+        let gameIds = [game]; // Keep track of game as an array
+        if (game === 10) {
+            gameIds = [12, 13, 14]; // Change to an array
+            console.log("true", gameIds);
+        }
+
+        await fetchData(gameIds, true, setLoading, setAPI, api);
         setLoading(false);
 
         setBackgroundLoading(true);
-        await fetchData(allGames.filter(item => item !== game), false, setLoading, setAPI, api);
+
+        // Ensure `allGames.filter()` works properly by handling `gameIds` as an array
+        const remainingGames = allGames.filter(item => !gameIds.includes(item));
+
+        await fetchData(remainingGames, false, setLoading, setAPI, api);
         setBackgroundLoading(false);
 
         setConfirmed(true);
