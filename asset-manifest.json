@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/casual-pkmn-team-builder/static/css/main.529557c7.css",
-    "main.js": "/casual-pkmn-team-builder/static/js/main.f2162c74.js",
+    "main.js": "/casual-pkmn-team-builder/static/js/main.1add8c73.js",
     "static/js/453.013b6f9a.chunk.js": "/casual-pkmn-team-builder/static/js/453.013b6f9a.chunk.js",
     "static/media/16.png": "/casual-pkmn-team-builder/static/media/16.3695b5417cd3fcca1e14.png",
     "static/media/7.png": "/casual-pkmn-team-builder/static/media/7.4ed1a43c23fc9f9a9f33.png",
@@ -25,11 +25,11 @@
     "static/media/pokeballSymbol.png": "/casual-pkmn-team-builder/static/media/pokeballSymbol.6f14a0828f078f498eaf.png",
     "index.html": "/casual-pkmn-team-builder/index.html",
     "main.529557c7.css.map": "/casual-pkmn-team-builder/static/css/main.529557c7.css.map",
-    "main.f2162c74.js.map": "/casual-pkmn-team-builder/static/js/main.f2162c74.js.map",
+    "main.1add8c73.js.map": "/casual-pkmn-team-builder/static/js/main.1add8c73.js.map",
     "453.013b6f9a.chunk.js.map": "/casual-pkmn-team-builder/static/js/453.013b6f9a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.529557c7.css",
-    "static/js/main.f2162c74.js"
+    "static/js/main.1add8c73.js"
   ]
 }
