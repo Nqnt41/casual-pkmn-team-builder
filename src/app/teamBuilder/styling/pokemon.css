@@ -36,6 +36,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 0;
 }
 
 figure.item {
@@ -82,6 +83,14 @@ figure.item {
     background-color: rgba(105, 105, 105, 0.8);
     border: 4px none white;
     border-bottom-style: ridge;
+}
+
+.teamNameText {
+    margin: 0;
+    padding: 8px 0;
+    font-size: 1.75rem;
+    font-weight: bold;
+    text-align: center;
 }
 
 .pokemonListWrapper {
