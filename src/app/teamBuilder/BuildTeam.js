@@ -19,7 +19,7 @@ function BuildTeam() {
 
     const [id, setID] = useState(null);
     const [team, setTeam] = useState([]);
-    const [storedTeams, setStoredTeams] = useState(new Map());
+    const [storedTeams, setStoredTeams] = useState([]); // TODO: new Map()
     const [teamName, setTeamName] = useState("");
     const [currTeamName, setCurrTeamName] = useState("");
 

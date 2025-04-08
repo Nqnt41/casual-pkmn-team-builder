@@ -26,7 +26,7 @@ export const addToTeam = async (pokemon, setID, team, setTeam, setNote) => {
     }
 
     if (team.length >= 5) {
-        setNote("Team is full!"); // TODO: Search currently broken, doesnt check properly for if pokemon name is valid.
+        setNote("Team is full!");
     }
     else if (pokemon == null) {
         setNote("Not a valid Pokemon!");
@@ -119,6 +119,7 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
                     {hoverTeam.map((pokemon, index) => (
                         <img
                             className={`teamSprite behindSprite ${pokemon?.types[1] ? 'behindSprite2' : ''} pokeballSymbol`}
+                            style={{zIndex: "10000"}}
                             data-type={pokemon?.types?.[0]?.name || ""}
                             data-type2={pokemon?.types?.[1]?.name || ""}
                             onMouseEnter={() => handleMouseEnter(index)}

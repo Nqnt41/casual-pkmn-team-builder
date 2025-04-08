@@ -16,6 +16,7 @@ export const SearchBar = ( {id, setID, team, setTeam, setNote, loading, permitte
             <div>
                 <input
                     className="search"
+                    style={{zIndex: 0}}
                     placeholder="Enter Pokémon Name/ID"
                     onChange={(event) => setID(event.target.value)}
                     onKeyDown={(event) => {
@@ -24,7 +25,11 @@ export const SearchBar = ( {id, setID, team, setTeam, setNote, loading, permitte
                         }
                     }}
                 />
-                <button onClick={() => addToTeam(id, setID, team, setTeam, setNote)} className="search">Add</button>
+                <button
+                    onClick={() => addToTeam(id, setID, team, setTeam, setNote)}
+                    className="search"
+                    style={{zIndex: 0}}
+                >Add</button>
 
                 <TypeSelection permittedTypes={permittedTypes} setPermittedTypes={setPermittedTypes}/>
             </div>
