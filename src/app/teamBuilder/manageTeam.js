@@ -92,16 +92,28 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
                 <button className="addTeam" onClick={() => addToStorage()}>Store Team</button>
 
                 {storedTeams.map((currTeam, index) => (
-                    <button
-                        key={index + 1}
-                        className="accessTeam"
-                        onClick={() => accessStoredTeam(index)}
-                        onMouseEnter={() => handleMouseEnter(currTeam)}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        {index + 1}
-                    </button>
+                    <span>
+                        <button
+                            key={index + 1}
+                            className="accessTeam"
+                            onClick={() => accessStoredTeam(index)}
+                            onMouseEnter={() => handleMouseEnter(currTeam)}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            {index + 1}
+                        </button>
+                        <button
+                            key={index + 1}
+                            className="removeTeam"
+                            style={{ marginRight: index !== storedTeams.size - 1 ? '0.25rem' : '' }}
+                            onClick={() => removeFromStorage(index)}
+                        >
+                            X
+                        </button>
+                    </span>
                 ))}
+
+                {/*<button className="addTeam" onClick={() => console.log("test")}>Save to Firebase</button>*/}
 
                 <div className="popupWindow teamImages">
                     {hoverTeam.map((pokemon, index) => (
@@ -117,17 +129,6 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
                     ))}
                 </div>
 
-                <input
-                    className="removeTeam"
-                    placeholder="Enter Number"
-                    onChange={(event) => setTeamToRemove(event.target.value)}
-                    onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                            removeFromStorage(Number(teamToRemove) - 1);
-                        }
-                    }}
-                />
-                <button onClick={() => removeFromStorage(Number(teamToRemove) - 1)} className="search">Remove</button>
                 <GenerationSelect setAPI={setAPI} api={api} loading={loading} backgroundLoading={backgroundLoading}/>
             </div>
         );

@@ -10,7 +10,7 @@ import {fetchVariety} from "./manageData.js";
 import {formatName} from '../textParsing.js';
 import {addToTeam, removeFromTeam} from './manageTeam.js';
 
-export const SearchBar = ( {id, setID, team, setTeam, setNote, loading} ) => {
+export const SearchBar = ( {id, setID, team, setTeam, setNote, loading, permittedTypes, setPermittedTypes} ) => {
     if (!loading) {
         return (
             <div>
@@ -25,15 +25,83 @@ export const SearchBar = ( {id, setID, team, setTeam, setNote, loading} ) => {
                     }}
                 />
                 <button onClick={() => addToTeam(id, setID, team, setTeam, setNote)} className="search">Add</button>
+
+                <TypeSelection permittedTypes={permittedTypes} setPermittedTypes={setPermittedTypes}/>
             </div>
         );
     }
 }
 
-export const printTeamImages = (setTeam, team, setNote, note, loading) => {
+const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
+    const [hover, setHover] = useState(false);
+    const [listHidden, setListHidden] = useState(true);
+    const [dropText, setDropText] = useState("▲");
+
+    const changeDropdownLogo = () => {
+        if (dropText === "▲") {
+            setDropText("▼");
+        }
+        else {
+            setDropText("▲");
+        }
+    }
+
+    const handleCheckboxChange = (index) => {
+        const updatedTypes = [...permittedTypes];
+        updatedTypes[index].isActive = !updatedTypes[index].isActive;
+        setPermittedTypes(updatedTypes);
+    };
+
+    return (
+        <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
+            <div
+                className={`typesButton ${hover ? 'mainButtonHighlight' : ''}`}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+                onClick={() => {
+                    changeDropdownLogo();
+                    setListHidden(!listHidden);
+                }}
+            >
+                {dropText + " Filter Types"}
+            </div>
+            {!listHidden &&
+                <span>
+                    {permittedTypes.map((type, index) => (
+                        <div className={`${index !== permittedTypes.length - 1 ? 'border' : ''}`}>
+                            <label>
+                                <input className="checkbox" type="checkbox" checked={type.isActive} onChange={() => handleCheckboxChange(index)}/>
+                                <span className="pointing">{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</span>
+                            </label>
+                        </div>
+                    ))}
+                </span>
+            }
+        </div>
+    );
+}
+
+export const printTeamImages = (setTeam, team, setNote, note, loading, teamName, setTeamName, setCurrTeamName, currTeamName) => {
     if (!loading && team.length) {
         return (
             <div className="teamBorder">
+                <div style={{marginBottom: "20px"}}>
+                <input
+                    className="search"
+                    placeholder="Team Name..."
+                    value={teamName}
+                    onChange={(event) => setTeamName(event.target.value)}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            setCurrTeamName(teamName);
+                        }
+                    }}
+                />
+                <button
+                    className="search"
+                    onClick={() => setCurrTeamName(teamName)}>Set Team Name</button>
+                </div>
+                <div style={{fontSize: "1.5rem", fontWeight: "bold", marginTop: "0", marginBottom: "1rem"}}>{currTeamName}</div>
                 <div className="teamImages">
                     {team.map((pokemon, index) => (
                         <figure className="item" key={index} onClick={() => removeFromTeam(pokemon, setTeam, team, setNote)}>
@@ -63,7 +131,7 @@ export const printTeamImages = (setTeam, team, setNote, note, loading) => {
     }
 };
 
-export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) => {
+export const PrintAllImages = ({ api, loading, setID, id, team, setTeam, setNote, permittedTypes }) => {
     const [popup, setPopup] = useState(null);
     const [hoveredPokemonId, setHoveredPokemonId] = useState(null);
 
@@ -100,7 +168,7 @@ export const PrintAllImages = ({ api, loading, setID, team, setTeam, setNote }) 
                     <div key={outerIndex} className="groupBorder">
                         <h1 className="generationText">{pokedex?.name}</h1>
                         <div className="pokemonListWrapper">
-                            {pokedex?.list.map((pokemon) => (
+                            {pokedex?.list.filter((pokemon) => pokemon.types.some((type) => type.isActive)).map((pokemon) => (
                                 <img
                                     className={`pokemonSprite ${team.some((member) => member.varieties?.some((variety) => variety === pokemon?.name)) ? 'highlight' : ''} 
                                         ${hoveredPokemonId === pokemon?.id ? 'altHighlight' : ''}`}
@@ -174,7 +242,7 @@ export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) =>
 
     if (!loading) {
         return (
-            <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
+            <div className={`checklist zIndex ${listHidden ? 'hidePadding' : ''}`}>
                 <div
                     className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
                     onMouseEnter={() => setHover(true)}
@@ -187,8 +255,10 @@ export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) =>
                     {dropText + " Pokédex Select"}
                 </div>
                 <span className={`${listHidden ? 'empty' : ''}`}>
+                    <div className="genLabel">Chosen Pokédex</div>
                     {api.map((pokedex, index) => (
                         <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
+                            {index === 1 && <div className="genLabel">Other Pokédexes</div>}
                             <label>
                                 <input className="checkbox" type="checkbox" checked={pokedex.active} onChange={() => changeActiveStatus(index)}/>
                                 <span className="pointing">{pokedex.name}</span>

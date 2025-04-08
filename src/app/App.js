@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './home/Home';
 import BuildTeam from './teamBuilder/BuildTeam';
 
 function App() {
     return (
-        <Router basename="/casual-pkmn-team-builder">
+        <Router>
             <Routes>
                 <Route path="/" element={<Navigate to="/game-selection" />} />
 

@@ -33,31 +33,37 @@
 }
 
 input.search {
-    width: 10rem;
-    height: 1.5rem;
-    padding-left: 0.5rem;
+    position: relative;
+    width: 11rem;
+    height: 1.805rem;
+    padding: 0 0.5rem;
     border: 0.1rem solid black;
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
+    box-sizing: border-box;
+    z-index: 0;
 }
 
 button.search {
-    height: 1.75rem;
+    position: relative;
+    height: 1.805rem;
     border: 0.1rem solid black;
     border-left: 0;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     margin-right: 0.5rem;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 input.removeTeam {
-    height: 1.5rem;
+    height: 1.805rem;
     width: 5.5rem;
     border: 0.1rem solid black;
     border-top-left-radius: 0.25rem;
     border-bottom-left-radius: 0.25rem;
     margin-left: 0.25rem;
+    cursor: pointer;
 }
 
 button.addTeam {
@@ -72,7 +78,15 @@ button.addTeam {
 button.accessTeam {
     height: 1.805rem;
     border: 0.1rem solid black;
-    border-radius: 0.25rem;
+    border-radius: 0.25rem 0 0 0.25rem;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+}
+button.removeTeam {
+    height: 1.805rem;
+    border: 0.1rem solid black;
+    border-left: none;
+    border-radius: 0 0.25rem 0.25rem 0;
     margin-bottom: 0.25rem;
     cursor: pointer;
 }
