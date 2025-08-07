@@ -29,15 +29,82 @@ export const SearchBar = ( {id, setID, team, setTeam, setNote, loading, permitte
                     onClick={() => addToTeam(id, setID, team, setTeam, setNote)}
                     className="search"
                     style={{zIndex: 0}}
-                >Add</button>
-
-                <TypeSelection permittedTypes={permittedTypes} setPermittedTypes={setPermittedTypes}/>
+                >
+                    Add
+                </button>
             </div>
         );
     }
 }
 
-const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
+export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading, permittedTypes, setPermittedTypes }) => {
+    const [hover, setHover] = useState(false);
+    const [listHidden, setListHidden] = useState(true);
+    const [dropText, setDropText] = useState("▲");
+
+    const changeDropdownLogo = () => {
+        if (dropText === "▲") {
+            setDropText("▼");
+        }
+        else {
+            setDropText("▲");
+        }
+    }
+
+    const changeActiveStatus = (index) => {
+        setAPI((api) => {
+            const updatedAPI = [...api];
+
+            if (updatedAPI[index]) {
+                updatedAPI[index] = {
+                    ...updatedAPI[index],
+                    active: !updatedAPI[index].active,
+                };
+            }
+            else {
+                console.error("ERROR - GenerationSelect: Invalid index provided to changeActiveStatus");
+            }
+            return updatedAPI;
+        });
+    };
+
+    if (!loading) {
+        return (
+            <div>
+                <div className={`checklist generation zIndex ${listHidden ? 'hidePadding' : ''}`}>
+                    <div
+                        className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
+                        onMouseEnter={() => setHover(true)}
+                        onMouseLeave={() => setHover(false)}
+                        onClick={() => {
+                            changeDropdownLogo();
+                            setListHidden(!listHidden)
+                        }}
+                    >
+                        {dropText + " Pokédex Select"}
+                    </div>
+                    <span className={`${listHidden ? 'empty' : ''}`}>
+                        <div className="genLabel">Chosen Pokédex</div>
+                        {api.map((pokedex, index) => (
+                            <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
+                                {index === 1 && <div className="genLabel">Other Pokédexes</div>}
+                                <label>
+                                    <input className="checkbox" type="checkbox" checked={pokedex.active} onChange={() => changeActiveStatus(index)}/>
+                                    <span className="pointing">{pokedex.name}</span>
+                                </label>
+                            </div>
+                        ))}
+                        {backgroundLoading && (
+                            <div className="topBorder">Loading Alternate Pokédex Entries...</div>
+                        )}
+                    </span>
+                </div>
+            </div>
+        );
+    }
+}
+
+export const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
     const [hover, setHover] = useState(false);
     const [listHidden, setListHidden] = useState(true);
     const [dropText, setDropText] = useState("▲");
@@ -58,7 +125,7 @@ const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
     };
 
     return (
-        <div className={`checklist ${listHidden ? 'hidePadding' : ''}`}>
+        <div className={`checklist types ${listHidden ? 'hidePadding' : ''}`}>
             <div
                 className={`typesButton ${hover ? 'mainButtonHighlight' : ''}`}
                 onMouseEnter={() => setHover(true)}
@@ -70,6 +137,7 @@ const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
             >
                 {dropText + " Filter Types"}
             </div>
+
             {!listHidden &&
                 <span>
                     {permittedTypes.map((type, index) => (
@@ -86,27 +154,34 @@ const TypeSelection = ( {permittedTypes, setPermittedTypes} ) => {
     );
 }
 
-export const printTeamImages = (setTeam, team, setNote, note, loading, teamName, setTeamName, setCurrTeamName, currTeamName) => {
+export const SetTeamName = ( {setTeamName, teamName, setCurrTeamName, currTeamName} ) => {
+    return (
+        <div style={{marginBottom: "10px"}}>
+            <input
+                className="search"
+                placeholder="Team Name..."
+                value={teamName}
+                onChange={(event) => setTeamName(event.target.value)}
+                onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                        setCurrTeamName(teamName);
+                    }
+                }}
+            />
+            <button
+                className="search"
+                onClick={() => setCurrTeamName(teamName)}>Set Team Name
+            </button>
+
+            <div style={{fontSize: "1.5rem", fontWeight: "bold", marginTop: "10px", marginBottom: "10px"}}>{currTeamName}</div>
+        </div>
+    );
+}
+
+export const printTeamImages = (setTeam, team, setNote, note, loading) => {
     if (!loading && team.length) {
         return (
-            <div className="teamBorder">
-                <div style={{marginBottom: "20px"}}>
-                <input
-                    className="search"
-                    placeholder="Team Name..."
-                    value={teamName}
-                    onChange={(event) => setTeamName(event.target.value)}
-                    onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                            setCurrTeamName(teamName);
-                        }
-                    }}
-                />
-                <button
-                    className="search"
-                    onClick={() => setCurrTeamName(teamName)}>Set Team Name</button>
-                </div>
-                <div style={{fontSize: "1.5rem", fontWeight: "bold", marginTop: "0", marginBottom: "1rem"}}>{currTeamName}</div>
+            <div>
                 <div className="teamImages">
                     {team.map((pokemon, index) => (
                         <figure className="item" key={index} onClick={() => removeFromTeam(pokemon, setTeam, team, setNote)}>
@@ -213,68 +288,3 @@ export const PrintAllImages = ({ api, loading, setID, id, team, setTeam, setNote
         );
     }
 };
-
-export const GenerationSelect = ({ setAPI, api, loading, backgroundLoading }) => {
-    const [hover, setHover] = useState(false);
-    const [listHidden, setListHidden] = useState(true);
-    const [dropText, setDropText] = useState("▲");
-
-    const changeDropdownLogo = () => {
-        if (dropText === "▲") {
-            setDropText("▼");
-        }
-        else {
-            setDropText("▲");
-        }
-    }
-
-    const changeActiveStatus = (index) => {
-        setAPI((api) => {
-            const updatedAPI = [...api];
-
-            if (updatedAPI[index]) {
-                updatedAPI[index] = {
-                    ...updatedAPI[index],
-                    active: !updatedAPI[index].active,
-                };
-            }
-            else {
-                console.error("ERROR - GenerationSelect: Invalid index provided to changeActiveStatus");
-            }
-            return updatedAPI;
-        });
-    };
-
-    if (!loading) {
-        return (
-            <div className={`checklist zIndex ${listHidden ? 'hidePadding' : ''}`}>
-                <div
-                    className={`mainButton ${hover ? 'mainButtonHighlight' : ''}`}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                    onClick={() => {
-                        changeDropdownLogo();
-                        setListHidden(!listHidden)
-                    }}
-                >
-                    {dropText + " Pokédex Select"}
-                </div>
-                <span className={`${listHidden ? 'empty' : ''}`}>
-                    <div className="genLabel">Chosen Pokédex</div>
-                    {api.map((pokedex, index) => (
-                        <div className={`${index !== api.length - 1 ? 'border' : ''}`}>
-                            {index === 1 && <div className="genLabel">Other Pokédexes</div>}
-                            <label>
-                                <input className="checkbox" type="checkbox" checked={pokedex.active} onChange={() => changeActiveStatus(index)}/>
-                                <span className="pointing">{pokedex.name}</span>
-                            </label>
-                        </div>
-                    ))}
-                    {backgroundLoading && (
-                        <div className="topBorder">Loading Alternate Pokédex Entries...</div>
-                    )}
-                </span>
-            </div>
-        );
-    }
-}

@@ -2,7 +2,7 @@ export const formatName = (name) => {
     const parts = name.split("-");
     const maintainNames = ["jangmo-o", "hakamo-o", "kommo-o", "ho-oh", "chi-yu", "chien-pao", "wo-chien", "ting-lu", "porygon-z"]
     const exceptions = ["-mega", "-alola", "-galar", "-hisui", "-gmax", "-eternamax", "-crowned", "-altered", "-cap", "-starter",
-        "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-", "nidoran-m", "nidoran-f"]
+        "-primal", "-origin", "-black", "-white", "-therian", "-terastal", "stellar", "-resolute", "-mr", "lycanroc-", "nidoran-m", "nidoran-f", "-noice"]
 
     const capitalizedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
 
@@ -22,6 +22,9 @@ export const formatName = (name) => {
         }
         else if (name.includes("jr-")) {
             return "Mime Jr.";
+        }
+        else if (name.includes("-noice")) {
+            return "No Ice Eiscue";
         }
         else if (name.includes("nidoran-m")) {
             return "Male Nidoran";

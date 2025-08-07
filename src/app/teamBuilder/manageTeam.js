@@ -5,7 +5,6 @@ import './styling/dropdown.css';
 import {useState} from "react";
 import {fetchPokemon} from "./manageData";
 import {convertToName} from '../textParsing.js';
-import {GenerationSelect} from './manageDisplay';
 
 export const addToTeam = async (pokemon, setID, team, setTeam, setNote) => {
     if (team.length < 6 && typeof pokemon === 'string') {
@@ -48,7 +47,7 @@ export const removeFromTeam = (member, setTeam, team, setNote) => {
     setNote("");
 };
 
-export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam, team, setStoredTeams, storedTeams, setNote } ) => { // setAPI={setAPI} api={api} loading={loading} backgroundLoading={backgroundLoading}
+export const TeamStorage = ( { setAPI, api, loading, setTeam, team, setStoredTeams, storedTeams, setNote } ) => {
     const [teamToRemove, setTeamToRemove] = useState("");
     const [hoverTeam, setHoverTeam] = useState([]);
 
@@ -88,7 +87,7 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
 
     if (!loading) {
         return (
-            <div>
+            <div style={{marginBottom: "10px"}}>
                 <button className="addTeam" onClick={() => addToStorage()}>Store Team</button>
 
                 {storedTeams.map((currTeam, index) => (
@@ -129,8 +128,6 @@ export const TeamStorage = ( { setAPI, api, loading, backgroundLoading, setTeam,
                         />
                     ))}
                 </div>
-
-                <GenerationSelect setAPI={setAPI} api={api} loading={loading} backgroundLoading={backgroundLoading}/>
             </div>
         );
     }

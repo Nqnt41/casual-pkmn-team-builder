@@ -2,7 +2,7 @@ import Axios from "axios";
 import {formatName} from '../textParsing.js'
 import {Pokedex, Pokemon} from '../pokemonInfo'
 
-export const fetchInitialData = async (game, setLoading, setAPI, api, setConfirmed, confirmed) => {
+export const fetchInitialData = async (game, setLoading, setBackgroundLoading, setAPI, api, setConfirmed, confirmed) => {
     const allGames = [1, 2, 3, 4, 6, 7, 8, 9, 12, 13, 14, 16, 21, 27, 31];
 
     if (!confirmed) {
@@ -24,6 +24,7 @@ export const fetchInitialData = async (game, setLoading, setAPI, api, setConfirm
         }
 
         setConfirmed(true);
+        setBackgroundLoading(false);
     }
 };
 

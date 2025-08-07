@@ -1,7 +1,7 @@
 /* Generations */
 .mainButton {
-    display: flex;
     position: relative;
+    display: inline-block;
     border: 0.1rem black;
     border-bottom-style: solid;
     border-radius: 0.2rem;
@@ -12,12 +12,13 @@
     height: 1.64rem;
     justify-content: center;
     align-content: end;
+    text-align: center;
     line-height: 25px;
     font-size: 14px;
 }
 
 .checklist {
-    display: inline-flex;
+    display: block;
     position: absolute;
     flex-direction: column;
     background-color: white;
@@ -25,6 +26,11 @@
     border: 0.1rem solid black;
     border-radius: 0.3rem;
     text-align: left;
+}
+
+.generation {
+    left: 50%;
+    transform: translateX(-100%) translateX(-7.5rem) translateY(-1.85rem);
 }
 
 /* Types */
@@ -56,6 +62,12 @@
     border-radius: 0.3rem;
     text-align: left;
 }
+
+.types {
+    left: 50%;
+    transform: translateX(6.95rem) translateY(-1.85rem);
+}
+
 
 /* Other */
 .zIndex {
